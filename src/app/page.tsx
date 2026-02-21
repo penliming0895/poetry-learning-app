@@ -217,6 +217,9 @@ export default function Home() {
             <a href="/wrongbook" onClick={() => addLog('测试链接: wrongbook')} className="text-blue-600 hover:underline">
               直接跳转到错题本
             </a>
+            <a href="/voice-test" onClick={() => addLog('测试链接: voice-test')} className="text-purple-600 hover:underline font-semibold">
+              🎤 语音朗读测试
+            </a>
           </div>
         </div>
       </div>
