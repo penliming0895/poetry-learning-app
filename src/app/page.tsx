@@ -19,6 +19,18 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-purple-900">
+      {/* 清除缓存链接 */}
+      {mounted && (
+        <div className="fixed top-2 right-2 z-50">
+          <Link
+            href="/clear-cache"
+            className="text-xs text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300"
+          >
+            清除缓存
+          </Link>
+        </div>
+      )}
+
       {/* 主容器 */}
       <div className="container mx-auto px-4 py-8">
         {/* 头部 */}

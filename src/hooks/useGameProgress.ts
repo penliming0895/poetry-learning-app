@@ -31,13 +31,22 @@ export const useGameProgress = () => {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
         const parsed = JSON.parse(saved);
-        // 合并默认值，确保新字段存在
-        setProgress({
-          ...defaultProgress,
-          ...parsed,
-          wrongPoetryList: parsed.wrongPoetryList || [],
-          wrongLineList: parsed.wrongLineList || [],
-        });
+
+        // 检查是否是旧版本数据（没有错题字段）
+        if (!parsed.wrongPoetryList || !parsed.wrongLineList) {
+          console.log('检测到旧版本数据，正在迁移...');
+          // 保留旧数据，只添加新字段
+          setProgress({
+            ...defaultProgress,
+            ...parsed,
+            wrongPoetryList: parsed.wrongPoetryList || [],
+            wrongLineList: parsed.wrongLineList || [],
+          });
+        } else {
+          setProgress(parsed);
+        }
+      } else {
+        setProgress(defaultProgress);
       }
     } catch (error) {
       console.error('Failed to load progress:', error);
