@@ -15,12 +15,14 @@ export default function VoicePlayer({ text, className = '', speaker = 'zh_female
   const [isLoading, setIsLoading] = useState(false);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const isInitializing = useRef(false);
 
   // 清理音频资源
   useEffect(() => {
     return () => {
       if (audioRef.current) {
         audioRef.current.pause();
+        audioRef.current.src = '';
         audioRef.current = null;
       }
       if (audioUrl) {
@@ -29,36 +31,50 @@ export default function VoicePlayer({ text, className = '', speaker = 'zh_female
     };
   }, [audioUrl]);
 
-  const handlePlay = async (e?: React.MouseEvent) => {
-    // 阻止事件冒泡，防止触发父元素的点击事件
-    if (e) {
-      e.stopPropagation();
-      e.preventDefault();
+  const handlePlayPause = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+
+    console.log('=== VoicePlayer handlePlayPause ===');
+    console.log('当前状态 - isPlaying:', isPlaying, 'isLoading:', isLoading, 'hasAudioUrl:', !!audioUrl);
+
+    // 防止重复初始化
+    if (isInitializing.current) {
+      console.log('正在初始化中，忽略点击');
+      return;
     }
 
-    console.log('VoicePlayer handlePlay called, isPlaying:', isPlaying);
-
+    // 如果正在播放，则暂停
     if (isPlaying) {
-      // 如果正在播放，则暂停
-      console.log('Pausing audio...');
+      console.log('执行暂停操作');
       if (audioRef.current) {
         audioRef.current.pause();
         setIsPlaying(false);
+        console.log('音频已暂停');
       }
       return;
     }
 
+    // 如果正在加载，忽略点击
+    if (isLoading) {
+      console.log('正在加载中，忽略点击');
+      return;
+    }
+
     // 如果已经有音频 URL，直接播放
-    if (audioUrl) {
-      console.log('Playing existing audio:', audioUrl);
-      playAudio();
+    if (audioUrl && audioRef.current) {
+      console.log('使用已有音频播放');
+      playAudio(audioUrl);
       return;
     }
 
     // 否则生成新音频
-    console.log('Generating new audio for text:', text.substring(0, 20) + '...');
+    console.log('生成新音频');
     setIsLoading(true);
+    isInitializing.current = true;
+
     try {
+      console.log('调用 TTS API，文本:', text.substring(0, 30) + '...');
       const response = await fetch('/api/tts', {
         method: 'POST',
         headers: {
@@ -67,7 +83,7 @@ export default function VoicePlayer({ text, className = '', speaker = 'zh_female
         body: JSON.stringify({ text, speaker }),
       });
 
-      console.log('TTS response status:', response.status);
+      console.log('TTS API 响应状态:', response.status);
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -75,59 +91,65 @@ export default function VoicePlayer({ text, className = '', speaker = 'zh_female
       }
 
       const data = await response.json();
-      console.log('TTS response data:', { audioUri: data.audioUri, audioSize: data.audioSize });
+      console.log('TTS API 响应成功，audioUri:', data.audioUri);
       setAudioUrl(data.audioUri);
       playAudio(data.audioUri);
     } catch (error) {
-      console.error('Error playing voice:', error);
+      console.error('生成音频失败:', error);
       alert(`语音播放失败: ${error instanceof Error ? error.message : '未知错误'}`);
-    } finally {
       setIsLoading(false);
+    } finally {
+      isInitializing.current = false;
     }
   };
 
-  const playAudio = (url?: string) => {
-    const audioUrlToUse = url || audioUrl;
-    if (!audioUrlToUse) {
-      console.error('No audio URL available');
-      return;
-    }
-
-    console.log('Creating audio for URL:', audioUrlToUse);
+  const playAudio = (url: string) => {
+    console.log('=== playAudio ===', url);
 
     // 清理之前的音频
     if (audioRef.current) {
+      console.log('清理之前的音频');
       audioRef.current.pause();
+      audioRef.current.onloadedmetadata = null;
+      audioRef.current.oncanplay = null;
+      audioRef.current.onended = null;
+      audioRef.current.onerror = null;
       audioRef.current.src = '';
       audioRef.current = null;
     }
 
-    const audio = new Audio(audioUrlToUse);
+    const audio = new Audio(url);
     audioRef.current = audio;
 
+    console.log('创建新的 Audio 对象');
+
     audio.onloadedmetadata = () => {
-      console.log('Audio metadata loaded, duration:', audio.duration);
+      console.log('音频元数据已加载，时长:', audio.duration);
     };
 
     audio.oncanplay = () => {
-      console.log('Audio can play, starting playback...');
+      console.log('音频可以播放，开始播放...');
       setIsPlaying(true);
-      audio.play().catch((error) => {
-        console.error('Error playing audio:', error);
-        setIsPlaying(false);
-        alert(`播放失败: ${error.message}`);
-      });
+      audio.play()
+        .then(() => {
+          console.log('播放成功');
+        })
+        .catch((error) => {
+          console.error('播放失败:', error);
+          setIsPlaying(false);
+          alert(`播放失败: ${error.message}`);
+        });
     };
 
     audio.onended = () => {
-      console.log('Audio playback ended');
+      console.log('音频播放结束');
       setIsPlaying(false);
     };
 
     audio.onerror = (e) => {
-      console.error('Audio error:', e);
-      console.error('Audio error details:', {
-        error: audio.error,
+      console.error('音频错误:', e);
+      console.error('错误详情:', {
+        error: audio.error?.message,
         networkState: audio.networkState,
         readyState: audio.readyState
       });
@@ -135,14 +157,13 @@ export default function VoicePlayer({ text, className = '', speaker = 'zh_female
       alert(`音频播放错误: ${audio.error?.message || '未知错误'}`);
     };
 
-    // 开始加载音频
     audio.load();
   };
 
   return (
     <div className={className}>
       <Button
-        onClick={(e) => handlePlay(e)}
+        onClick={handlePlayPause}
         disabled={isLoading}
         size="sm"
         variant="outline"
