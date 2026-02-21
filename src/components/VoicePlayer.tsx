@@ -2,13 +2,38 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Volume2, VolumeX, Loader2 } from 'lucide-react';
+import { Volume2, VolumeX, Loader2, Settings2 } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Slider } from '@/components/ui/slider';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface VoicePlayerProps {
   text: string;
   className?: string;
-  speaker?: 'zh_female_xueayi_saturn_bigtts' | 'zh_male_m191_uranus_bigtts';
 }
+
+// 音色选项
+const SPEAKER_OPTIONS = [
+  { value: 'zh_female_xueayi_saturn_bigtts', label: '女声 - 学雅', category: 'female' },
+  { value: 'zh_female_zhiuxu_mercury_bigtts', label: '女声 - 知旭', category: 'female' },
+  { value: 'zh_female_jingjing_saturn_bigtts', label: '女声 - 晶晶', category: 'female' },
+  { value: 'zh_male_m191_uranus_bigtts', label: '男声 - M191', category: 'male' },
+  { value: 'zh_male_zhicheng_uranus_bigtts', label: '男声 - 志诚', category: 'male' },
+  { value: 'zh_male_yunfei_mars_bigtts', label: '男声 - 云飞', category: 'male' },
+  { value: 'zh_child_nannan_saturn_bigtts', label: '童声 - 囡囡', category: 'child' },
+  { value: 'zh_child_xiaoxiao_mercury_bigtts', label: '童声 - 小小', category: 'child' },
+];
+
+// 语速选项
+const SPEECH_RATE_LABELS: Record<string, string> = {
+  '-5': '0.5x (很慢)',
+  '-3': '0.7x (较慢)',
+  '-1': '0.9x (稍慢)',
+  '0': '1.0x (正常)',
+  '1': '1.1x (稍快)',
+  '3': '1.3x (较快)',
+  '5': '1.5x (很快)',
+};
 
 // 全局音频缓存
 const audioCache = new Map<string, { url: string; timestamp: number }>();
@@ -25,10 +50,13 @@ setInterval(() => {
   });
 }, 5 * 60 * 1000); // 每5分钟清理一次
 
-export default function VoicePlayer({ text, className = '', speaker = 'zh_female_xueayi_saturn_bigtts' }: VoicePlayerProps) {
+export default function VoicePlayer({ text, className = '' }: VoicePlayerProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
+  const [speaker, setSpeaker] = useState('zh_female_xueayi_saturn_bigtts');
+  const [speechRate, setSpeechRate] = useState(0);
+  const [showSettings, setShowSettings] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const isInitializing = useRef(false);
 
@@ -49,12 +77,25 @@ export default function VoicePlayer({ text, className = '', speaker = 'zh_female
     };
   }, []);
 
+  // 当音色或语速改变时，清除当前音频
+  useEffect(() => {
+    if (audioUrl) {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.src = '';
+        audioRef.current = null;
+      }
+      setAudioUrl(null);
+      setIsPlaying(false);
+    }
+  }, [speaker, speechRate]);
+
   const handlePlayPause = async (e: React.MouseEvent) => {
     e.stopPropagation();
     e.preventDefault();
 
     console.log('=== VoicePlayer ===');
-    console.log('状态:', { isPlaying, isLoading, hasAudioUrl: !!audioUrl });
+    console.log('状态:', { isPlaying, isLoading, hasAudioUrl: !!audioUrl, speaker, speechRate });
 
     // 防止重复初始化
     if (isInitializing.current) {
@@ -96,7 +137,7 @@ export default function VoicePlayer({ text, className = '', speaker = 'zh_female
 
     try {
       // 检查缓存
-      const cacheKey = `${text}-${speaker}`;
+      const cacheKey = `${text}-${speaker}-${speechRate}`;
       const cached = audioCache.get(cacheKey);
 
       if (cached) {
@@ -107,11 +148,11 @@ export default function VoicePlayer({ text, className = '', speaker = 'zh_female
         return;
       }
 
-      console.log('📡 调用 TTS API...');
+      console.log('📡 调用 TTS API...', { speaker, speechRate });
       const response = await fetch('/api/tts', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text, speaker }),
+        body: JSON.stringify({ text, speaker, speechRate }),
       });
 
       console.log('📥 API 响应状态:', response.status);
@@ -168,126 +209,68 @@ export default function VoicePlayer({ text, className = '', speaker = 'zh_female
     audioRef.current = audio;
 
     // 设置音频属性
-    audio.crossOrigin = 'anonymous'; // 允许跨域
+    audio.crossOrigin = 'anonymous';
     audio.preload = 'auto';
     audio.src = url;
 
-    // 音频加载完成
     audio.onloadedmetadata = () => {
       console.log('📊 元数据加载完成，时长:', audio.duration, '秒');
     };
 
-    // 音频数据加载完成
     audio.oncanplaythrough = () => {
-      console.log('✅ 音频数据加载完成，可以流畅播放');
+      console.log('✅ 音频数据加载完成');
       setIsLoading(false);
     };
 
-    // 音频可以播放
     audio.oncanplay = () => {
       console.log('✅ 音频可以播放');
       setIsLoading(false);
     };
 
-    // 音频开始播放
     audio.onplay = () => {
       console.log('▶️ 音频开始播放');
       setIsPlaying(true);
       setIsLoading(false);
     };
 
-    // 音频暂停
     audio.onpause = () => {
       console.log('⏸️ 音频暂停');
       setIsPlaying(false);
       setIsLoading(false);
     };
 
-    // 音频播放结束
     audio.onended = () => {
       console.log('🏁 音频播放结束');
       setIsPlaying(false);
       setIsLoading(false);
     };
 
-    // 音频错误
     audio.onerror = (e) => {
       console.error('❌ 音频播放错误');
-      console.error('错误详情:', {
-        error: audio.error,
-        message: audio.error?.message,
-        code: audio.error?.code,
-        networkState: audio.networkState,
-        readyState: audio.readyState,
-        src: audio.src
-      });
-
       setIsPlaying(false);
       setIsLoading(false);
-
-      let errorMsg = '音频播放失败';
-      if (audio.error) {
-        switch (audio.error.code) {
-          case MediaError.MEDIA_ERR_ABORTED:
-            errorMsg = '音频播放被中止';
-            break;
-          case MediaError.MEDIA_ERR_NETWORK:
-            errorMsg = '网络错误，无法加载音频';
-            break;
-          case MediaError.MEDIA_ERR_DECODE:
-            errorMsg = '音频解码失败';
-            break;
-          case MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED:
-            errorMsg = '音频格式不支持';
-            break;
-          default:
-            errorMsg = `音频错误: ${audio.error.message}`;
-        }
-      }
-      alert(errorMsg + '\n\n请检查网络连接或稍后重试');
+      const errorMsg = audio.error?.message || '未知错误';
+      alert(`音频播放错误: ${errorMsg}`);
     };
 
-    // 开始加载音频
     audio.load();
 
-    // 等待音频加载后再播放
     setTimeout(() => {
-      console.log('🎬 准备播放音频，状态:', {
-        paused: audio.paused,
-        readyState: audio.readyState,
-        currentTime: audio.currentTime,
-        duration: audio.duration
-      });
-
       if (!audio.paused) {
-        console.log('✅ 音频已经在播放中');
         setIsPlaying(true);
         setIsLoading(false);
         return;
       }
 
-      console.log('🎬 调用 audio.play()');
       const playPromise = audio.play();
-
       if (playPromise !== undefined) {
         playPromise
-          .then(() => {
-            console.log('✅ audio.play() 成功');
-          })
+          .then(() => console.log('✅ audio.play() 成功'))
           .catch((err) => {
             console.error('❌ audio.play() 失败:', err);
             setIsPlaying(false);
             setIsLoading(false);
-
-            let hint = '';
-            if (err.name === 'NotAllowedError') {
-              hint = '浏览器阻止了自动播放，请先与页面交互后再试';
-            } else if (err.name === 'NotSupportedError') {
-              hint = '音频格式不支持';
-            } else {
-              hint = '可能原因：\n1. 浏览器阻止了自动播放\n2. 网络连接问题\n3. 音频文件损坏';
-            }
-            alert(`播放失败: ${err.message}\n\n${hint}`);
+            alert(`播放失败: ${err.message}`);
           });
       }
     }, 200);
@@ -295,10 +278,8 @@ export default function VoicePlayer({ text, className = '', speaker = 'zh_female
 
   const resumePlay = () => {
     if (audioRef.current) {
-      console.log('▶️ 恢复播放');
       audioRef.current.play()
         .then(() => {
-          console.log('✅ 恢复播放成功');
           setIsPlaying(true);
         })
         .catch((err) => {
@@ -308,24 +289,99 @@ export default function VoicePlayer({ text, className = '', speaker = 'zh_female
     }
   };
 
+  const getCategorySpeakers = (category: string) => {
+    return SPEAKER_OPTIONS.filter(s => s.category === category);
+  };
+
   return (
     <div className={className}>
-      <Button
-        onClick={handlePlayPause}
-        disabled={isLoading}
-        size="sm"
-        variant="outline"
-        className="bg-gradient-to-r from-blue-50 to-purple-50 hover:from-blue-100 hover:to-purple-100 border-2 border-blue-200 dark:border-blue-800 transition-all duration-300 hover:scale-105"
-      >
-        {isLoading ? (
-          <Loader2 className="h-4 w-4 animate-spin mr-2" />
-        ) : isPlaying ? (
-          <VolumeX className="h-4 w-4 mr-2" />
-        ) : (
-          <Volume2 className="h-4 w-4 mr-2" />
-        )}
-        {isLoading ? '生成中...' : isPlaying ? '暂停' : '朗读'}
-      </Button>
+      <div className="flex items-center gap-2">
+        <Button
+          onClick={handlePlayPause}
+          disabled={isLoading}
+          size="sm"
+          variant="outline"
+          className="bg-gradient-to-r from-blue-50 to-purple-50 hover:from-blue-100 hover:to-purple-100 border-2 border-blue-200 dark:border-blue-800 transition-all duration-300 hover:scale-105"
+        >
+          {isLoading ? (
+            <Loader2 className="h-4 w-4 animate-spin mr-2" />
+          ) : isPlaying ? (
+            <VolumeX className="h-4 w-4 mr-2" />
+          ) : (
+            <Volume2 className="h-4 w-4 mr-2" />
+          )}
+          {isLoading ? '生成中...' : isPlaying ? '暂停' : '朗读'}
+        </Button>
+
+        <Button
+          onClick={() => setShowSettings(!showSettings)}
+          size="sm"
+          variant="ghost"
+          className="hover:bg-blue-100 dark:hover:bg-blue-900/30"
+        >
+          <Settings2 className="h-4 w-4" />
+        </Button>
+      </div>
+
+      {/* 设置面板 */}
+      {showSettings && (
+        <Card className="mt-4 border-2 border-blue-200 dark:border-blue-800">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-base">朗读设置</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {/* 音色选择 */}
+            <div>
+              <label className="text-sm font-medium mb-2 block">选择音色</label>
+              <Select value={speaker} onValueChange={setSpeaker}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <div className="px-2 py-1 text-sm font-semibold text-blue-600">女声</div>
+                  {getCategorySpeakers('female').map((s) => (
+                    <SelectItem key={s.value} value={s.value}>
+                      {s.label}
+                    </SelectItem>
+                  ))}
+                  <div className="px-2 py-1 text-sm font-semibold text-blue-600 mt-1">男声</div>
+                  {getCategorySpeakers('male').map((s) => (
+                    <SelectItem key={s.value} value={s.value}>
+                      {s.label}
+                    </SelectItem>
+                  ))}
+                  <div className="px-2 py-1 text-sm font-semibold text-blue-600 mt-1">童声</div>
+                  {getCategorySpeakers('child').map((s) => (
+                    <SelectItem key={s.value} value={s.value}>
+                      {s.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* 语速调节 */}
+            <div>
+              <label className="text-sm font-medium mb-2 block">
+                语速: <span className="text-blue-600 font-semibold">{SPEECH_RATE_LABELS[String(speechRate)] || '1.0x'}</span>
+              </label>
+              <Slider
+                value={[speechRate]}
+                onValueChange={(values) => setSpeechRate(values[0])}
+                min={-5}
+                max={5}
+                step={2}
+                className="w-full"
+              />
+              <div className="flex justify-between text-xs text-gray-500 mt-1">
+                <span>慢</span>
+                <span>正常</span>
+                <span>快</span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }

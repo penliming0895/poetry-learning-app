@@ -3,7 +3,7 @@ import { TTSClient, Config, HeaderUtils } from 'coze-coding-dev-sdk';
 
 export async function POST(request: NextRequest) {
   try {
-    const { text, speaker } = await request.json();
+    const { text, speaker, speechRate } = await request.json();
 
     if (!text) {
       return NextResponse.json({ error: 'Text is required' }, { status: 400 });
@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
       speaker: speaker || 'zh_female_xueayi_saturn_bigtts',
       audioFormat: 'mp3',
       sampleRate: 24000,
-      speechRate: 0,
+      speechRate: speechRate || 0, // -10 到 10，0 是正常速度
       loudnessRate: 0
     });
 
