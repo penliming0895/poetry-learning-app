@@ -83,7 +83,7 @@ export default function DailyPage() {
         <div className="mb-8 animate-fade-in-down">
           <div className="mb-4 flex items-center gap-4">
             <div className="rounded-2xl bg-gradient-to-br from-orange-400 to-red-500 p-4 shadow-lg transform hover:scale-110 transition-transform duration-300">
-              <Flame className="h-10 w-10 text-white animate-pulse" />
+              <img src="/li_qingzhao.png" alt="李清照" className="h-10 w-10 rounded-full object-cover" />
             </div>
             <div>
               <h1 className="bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-4xl font-extrabold text-transparent dark:from-orange-400 dark:to-red-400 tracking-tight">
@@ -176,7 +176,7 @@ export default function DailyPage() {
                         </Badge>
                       </div>
                       <CardTitle className="text-2xl font-semibold mb-2 flex items-center gap-2">
-                        <BookOpen className="h-6 w-6 text-orange-500" />
+                        <img src="/bai_juyi.png" alt="白居易" className="h-6 w-6 rounded-full object-cover" />
                         {poem.title}
                       </CardTitle>
                       <CardDescription className="text-base flex items-center gap-2">

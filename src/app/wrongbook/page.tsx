@@ -71,7 +71,7 @@ export default function WrongBookPage() {
         <div className="mb-8 animate-fade-in-down">
           <div className="mb-4 flex items-center gap-4">
             <div className="rounded-2xl bg-gradient-to-br from-red-400 to-orange-500 p-4 shadow-lg transform hover:scale-110 transition-transform duration-300">
-              <AlertCircle className="h-10 w-10 text-white" />
+              <img src="/li_bai.png" alt="李白" className="h-10 w-10 rounded-full object-cover" />
             </div>
             <div>
               <h1 className="bg-gradient-to-r from-red-600 to-orange-600 bg-clip-text text-4xl font-extrabold text-transparent dark:from-red-400 dark:to-orange-400 tracking-tight">
@@ -101,7 +101,7 @@ export default function WrongBookPage() {
                   </p>
                 </div>
                 <div className="h-16 w-16 rounded-full bg-gradient-to-br from-red-400 to-orange-500 flex items-center justify-center shadow-lg transform hover:scale-110 transition-transform duration-300">
-                  <BookOpen className="h-8 w-8 text-white" />
+                  <img src="/bai_juyi.png" alt="白居易" className="h-10 w-10 rounded-full object-cover" />
                 </div>
               </div>
             </CardContent>
@@ -120,7 +120,7 @@ export default function WrongBookPage() {
                   </p>
                 </div>
                 <div className="h-16 w-16 rounded-full bg-gradient-to-br from-orange-400 to-yellow-500 flex items-center justify-center shadow-lg transform hover:scale-110 transition-transform duration-300">
-                  <AlertCircle className="h-8 w-8 text-white" />
+                  <img src="/du_fu.png" alt="杜甫" className="h-10 w-10 rounded-full object-cover" />
                 </div>
               </div>
             </CardContent>

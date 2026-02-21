@@ -225,7 +225,7 @@ export default function PracticePage() {
                 </p>
               </div>
               <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-400 to-indigo-500 text-white shadow-lg transform hover:scale-110 transition-transform duration-300">
-                <BookOpen className="h-8 w-8" />
+                <img src="/bai_juyi.png" alt="白居易" className="h-10 w-10 rounded-full object-cover" />
               </div>
             </div>
           </CardHeader>

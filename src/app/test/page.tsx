@@ -117,7 +117,7 @@ export default function TestPage() {
           <div className="mb-8 animate-fade-in-down">
             <div className="mb-4 flex items-center gap-4">
               <div className="rounded-2xl bg-gradient-to-br from-purple-400 to-pink-500 p-4 shadow-lg transform hover:scale-110 transition-transform duration-300">
-                <PenTool className="h-8 w-8 text-white" />
+                <img src="/li_qingzhao.png" alt="李清照" className="h-10 w-10 rounded-full object-cover" />
               </div>
               <div>
                 <h1 className="text-4xl font-extrabold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent dark:from-purple-400 dark:to-pink-400 tracking-tight">
@@ -359,7 +359,7 @@ export default function TestPage() {
                 </p>
               </div>
               <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-400 to-pink-500 text-white shadow-lg transform hover:scale-110 transition-transform duration-300">
-                <PenTool className="h-8 w-8" />
+                <img src="/li_qingzhao.png" alt="李清照" className="h-10 w-10 rounded-full object-cover" />
               </div>
             </div>
           </CardHeader>
