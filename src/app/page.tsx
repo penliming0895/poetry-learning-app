@@ -29,7 +29,7 @@ export default function Home() {
           </p>
           <div className="mt-4 flex justify-center gap-2">
             <Badge variant="secondary" className="bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300">
-              10首经典诗词
+              60首必背古诗
             </Badge>
             <Badge variant="secondary" className="bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300">
               练习+测试双模式
@@ -37,8 +37,65 @@ export default function Home() {
             <Badge variant="secondary" className="bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300">
               智能评分
             </Badge>
+            <Badge variant="secondary" className="bg-orange-100 text-orange-700 dark:bg-orange-900 dark:text-orange-300">
+              每日背默5首
+            </Badge>
           </div>
         </header>
+
+        {/* 每日背默任务 */}
+        <div className="mb-12">
+          <h2 className="mb-6 text-center text-2xl font-semibold text-gray-800 dark:text-gray-100">
+            今日任务
+          </h2>
+          <Link href="/daily" className="group">
+            <Card
+              className={`cursor-pointer border-2 transition-all duration-300 ${
+                hoveredCard === 'daily'
+                  ? 'scale-105 border-orange-500 shadow-xl'
+                  : 'hover:scale-102 hover:shadow-lg'
+              }`}
+              onMouseEnter={() => setHoveredCard('daily')}
+              onMouseLeave={() => setHoveredCard(null)}
+            >
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-gradient-to-br from-orange-400 to-red-500 text-white">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="32"
+                        height="32"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                        <line x1="16" y1="2" x2="16" y2="6" />
+                        <line x1="8" y1="2" x2="8" y2="6" />
+                        <line x1="3" y1="10" x2="21" y2="10" />
+                      </svg>
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">
+                        每日背默5首
+                      </h3>
+                      <p className="text-sm text-gray-600 dark:text-gray-300">
+                        根据日期自动轮换，每天5首新诗词
+                      </p>
+                    </div>
+                  </div>
+                  <Button className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600">
+                    开始今日任务
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </Link>
+        </div>
 
         {/* 游戏模式选择 */}
         <div className="mb-12">

@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -12,12 +13,25 @@ import { Poetry } from '@/types/poetry';
 import { useGameProgress } from '@/hooks/useGameProgress';
 
 export default function TestPage() {
+  const searchParams = useSearchParams();
+  const poemId = searchParams.get('poemId');
+
   const [selectedPoetry, setSelectedPoetry] = useState<Poetry | null>(null);
   const [userInput, setUserInput] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [score, setScore] = useState(0);
   const [matchedLines, setMatchedLines] = useState<number[]>([]);
   const { recordTest } = useGameProgress();
+
+  // 如果有poemId，自动选择对应的诗词
+  useEffect(() => {
+    if (poemId) {
+      const poem = poetryDatabase.find(p => p.id === poemId);
+      if (poem) {
+        setSelectedPoetry(poem);
+      }
+    }
+  }, [poemId]);
 
   const handleSelectPoetry = (poetry: Poetry) => {
     setSelectedPoetry(poetry);

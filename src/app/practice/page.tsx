@@ -1,17 +1,21 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { ArrowLeft, BookOpen, Eye, EyeOff, CheckCircle, XCircle, Lightbulb } from 'lucide-react';
-import { poetryDatabase } from '@/data/poetryData';
+import { poetryDatabase, getPoetryById } from '@/data/poetryData';
 import { Poetry } from '@/types/poetry';
 import { useGameProgress } from '@/hooks/useGameProgress';
 
 export default function PracticePage() {
+  const searchParams = useSearchParams();
+  const poemId = searchParams.get('poemId');
+
   const [currentPoetryIndex, setCurrentPoetryIndex] = useState(0);
   const [currentLineIndex, setCurrentLineIndex] = useState(0);
   const [showAnswer, setShowAnswer] = useState(false);
@@ -19,6 +23,16 @@ export default function PracticePage() {
   const [correctCount, setCorrectCount] = useState(0);
   const [showHint, setShowHint] = useState(false);
   const { recordPractice } = useGameProgress();
+
+  // 如果有poemId，跳转到对应的诗词
+  useEffect(() => {
+    if (poemId) {
+      const index = poetryDatabase.findIndex(p => p.id === poemId);
+      if (index !== -1) {
+        setCurrentPoetryIndex(index);
+      }
+    }
+  }, [poemId]);
 
   const currentPoetry: Poetry = poetryDatabase[currentPoetryIndex];
   const totalLines = currentPoetry.lines.length;
