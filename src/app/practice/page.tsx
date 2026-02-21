@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { ArrowLeft, BookOpen, Eye, EyeOff, CheckCircle, XCircle, Lightbulb, Sparkles, Star, Zap } from 'lucide-react';
+import VoicePlayer from '@/components/VoicePlayer';
 import { poetryDatabase, getPoetryById } from '@/data/poetryData';
 import { Poetry } from '@/types/poetry';
 import { useGameProgress } from '@/hooks/useGameProgress';
@@ -264,8 +265,13 @@ export default function PracticePage() {
               <div className="rounded-xl bg-gradient-to-br from-gray-100 to-gray-200 p-6 shadow-inner dark:from-gray-800 dark:to-gray-900 border-2 border-gray-200 dark:border-gray-700">
                 <div className="text-center min-h-[80px] flex items-center justify-center">
                   {showAnswer ? (
-                    <div className="text-2xl font-extrabold text-gray-900 dark:text-gray-100 animate-fade-in tracking-tight">
-                      {currentPoetry.lines[currentLineIndex]}
+                    <div className="w-full">
+                      <div className="text-2xl font-extrabold text-gray-900 dark:text-gray-100 animate-fade-in tracking-tight mb-3">
+                        {currentPoetry.lines[currentLineIndex]}
+                      </div>
+                      <div className="flex justify-center">
+                        <VoicePlayer text={currentPoetry.lines[currentLineIndex]} />
+                      </div>
                     </div>
                   ) : (
                     <div className="flex items-center justify-center space-x-2 text-gray-400 dark:text-gray-500">

@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { ArrowLeft, Calendar, BookOpen, CheckCircle2, Circle, Play, Sparkles, Star, Trophy, Flame } from 'lucide-react';
 import { getDailyPoetry } from '@/data/poetryData';
+import VoicePlayer from '@/components/VoicePlayer';
 import { Poetry } from '@/types/poetry';
 import { useGameProgress } from '@/hooks/useGameProgress';
 
@@ -197,9 +198,12 @@ export default function DailyPage() {
                 <CardContent>
                   <div className="space-y-4">
                     <div className="rounded-xl bg-gradient-to-br from-gray-100 to-gray-200 p-5 dark:from-gray-800 dark:to-gray-900 border-2 border-gray-200 dark:border-gray-700">
-                      <p className="text-base text-gray-700 dark:text-gray-300 leading-relaxed">
+                      <p className="text-base text-gray-700 dark:text-gray-300 leading-relaxed mb-3">
                         {poem.content.substring(0, 50)}...
                       </p>
+                      <div>
+                        <VoicePlayer text={poem.content} />
+                      </div>
                     </div>
 
                     <div className="flex gap-3">

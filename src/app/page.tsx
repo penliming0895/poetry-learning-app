@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { BookOpen, PenTool, Trophy, GraduationCap, AlertCircle, Sparkles, Star } from 'lucide-react';
 import { useGameProgress } from '@/hooks/useGameProgress';
+import { StudyReminderButton } from '@/components/StudyReminder';
 
 export default function Home() {
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);
@@ -52,9 +53,10 @@ export default function Home() {
       <FloatingEmoji emoji="📝" style={{ bottom: '20%', left: '8%', animationDuration: '3s', animationDelay: '2s' }} />
       <FloatingEmoji emoji="🌟" style={{ bottom: '25%', right: '10%', animationDuration: '3.8s', animationDelay: '0.8s' }} />
 
-      {/* 清除缓存链接 */}
+      {/* 清除缓存链接和学习提醒 */}
       {mounted && (
-        <div className="fixed top-2 right-2 z-50">
+        <div className="fixed top-2 right-2 z-50 flex items-center gap-4">
+          <StudyReminderButton />
           <Link
             href="/clear-cache"
             className="text-xs text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 transition-colors"
