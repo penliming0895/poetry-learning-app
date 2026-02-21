@@ -86,7 +86,7 @@ export default function DailyPage() {
               <Flame className="h-10 w-10 text-white animate-pulse" />
             </div>
             <div>
-              <h1 className="bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-4xl font-bold text-transparent dark:from-orange-400 dark:to-red-400">
+              <h1 className="bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-4xl font-extrabold text-transparent dark:from-orange-400 dark:to-red-400 tracking-tight">
                 每日背默
               </h1>
               <p className="text-lg text-gray-600 dark:text-gray-300 mt-1 flex items-center gap-2">

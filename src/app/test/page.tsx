@@ -120,7 +120,7 @@ export default function TestPage() {
                 <PenTool className="h-8 w-8 text-white" />
               </div>
               <div>
-                <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent dark:from-purple-400 dark:to-pink-400">
+                <h1 className="text-4xl font-extrabold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent dark:from-purple-400 dark:to-pink-400 tracking-tight">
                   选择要测试的诗词
                 </h1>
                 <p className="text-lg text-gray-600 dark:text-gray-300 mt-1 flex items-center gap-2">
@@ -238,7 +238,7 @@ export default function TestPage() {
                   )}
                 </div>
               </div>
-              <CardTitle className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent dark:from-purple-400 dark:to-pink-400">
+              <CardTitle className="text-3xl font-extrabold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent dark:from-purple-400 dark:to-pink-400 tracking-tight">
                 {score >= 80 ? '🎉 太棒了！' : score >= 60 ? '👍 继续加油！' : '💪 再接再厉！'}
               </CardTitle>
               <CardDescription className="text-lg mt-2 flex items-center justify-center gap-2">
@@ -350,7 +350,7 @@ export default function TestPage() {
           <CardHeader>
             <div className="flex items-center justify-between">
               <div className="flex-1">
-                <CardTitle className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent dark:from-purple-400 dark:to-pink-400">
+                <CardTitle className="text-3xl font-extrabold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent dark:from-purple-400 dark:to-pink-400 tracking-tight">
                   {selectedPoetry.title}
                 </CardTitle>
                 <p className="text-base text-gray-600 dark:text-gray-300 mt-2 flex items-center gap-2">

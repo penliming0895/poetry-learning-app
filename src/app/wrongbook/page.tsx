@@ -74,7 +74,7 @@ export default function WrongBookPage() {
               <AlertCircle className="h-10 w-10 text-white" />
             </div>
             <div>
-              <h1 className="bg-gradient-to-r from-red-600 to-orange-600 bg-clip-text text-4xl font-bold text-transparent dark:from-red-400 dark:to-orange-400">
+              <h1 className="bg-gradient-to-r from-red-600 to-orange-600 bg-clip-text text-4xl font-extrabold text-transparent dark:from-red-400 dark:to-orange-400 tracking-tight">
                 错题本
               </h1>
               <p className="text-lg text-gray-600 dark:text-gray-300 mt-1 flex items-center gap-2">

@@ -73,29 +73,29 @@ export default function Home() {
           <div className="mb-4 inline-flex items-center justify-center rounded-full bg-gradient-to-r from-blue-100 to-purple-100 p-4 dark:from-blue-900 dark:to-purple-900 shadow-lg hover:shadow-xl transition-shadow duration-300">
             <GraduationCap className="h-12 w-12 text-blue-600 dark:text-blue-400" />
           </div>
-          <h1 className="mb-3 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-4xl font-bold text-transparent dark:from-blue-400 dark:via-purple-400 dark:to-pink-400 animate-gradient-x">
+          <h1 className="mb-3 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-4xl font-extrabold text-transparent dark:from-blue-400 dark:via-purple-400 dark:to-pink-400 animate-gradient-x leading-tight">
             初三语文古诗词背默
           </h1>
-          <p className="text-lg text-gray-600 dark:text-gray-300 mb-2">
+          <p className="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-2 leading-relaxed">
             游戏化学习，轻松掌握必背古诗词 🎮
           </p>
-          <p className="text-sm text-gray-500 dark:text-gray-400">
+          <p className="text-sm font-medium text-gray-600 dark:text-gray-400 leading-relaxed">
             让背诵不再枯燥，让学习充满乐趣 ✨
           </p>
           <div className="mt-6 flex justify-center gap-2 flex-wrap">
-            <Badge variant="secondary" className="bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 px-3 py-1 hover:scale-105 transition-transform cursor-default">
+            <Badge variant="secondary" className="bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 px-3 py-1 hover:scale-105 transition-transform cursor-default font-semibold text-sm">
               📚 60首必背古诗
             </Badge>
-            <Badge variant="secondary" className="bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300 px-3 py-1 hover:scale-105 transition-transform cursor-default">
+            <Badge variant="secondary" className="bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300 px-3 py-1 hover:scale-105 transition-transform cursor-default font-semibold text-sm">
               🎯 练习+测试双模式
             </Badge>
-            <Badge variant="secondary" className="bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300 px-3 py-1 hover:scale-105 transition-transform cursor-default">
+            <Badge variant="secondary" className="bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300 px-3 py-1 hover:scale-105 transition-transform cursor-default font-semibold text-sm">
               ⭐ 智能评分
             </Badge>
-            <Badge variant="secondary" className="bg-orange-100 text-orange-700 dark:bg-orange-900 dark:text-orange-300 px-3 py-1 hover:scale-105 transition-transform cursor-default">
+            <Badge variant="secondary" className="bg-orange-100 text-orange-700 dark:bg-orange-900 dark:text-orange-300 px-3 py-1 hover:scale-105 transition-transform cursor-default font-semibold text-sm">
               📅 每日背默5首
             </Badge>
-            <Badge variant="secondary" className="bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300 px-3 py-1 hover:scale-105 transition-transform cursor-default">
+            <Badge variant="secondary" className="bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300 px-3 py-1 hover:scale-105 transition-transform cursor-default font-semibold text-sm">
               ❌ 错题本
             </Badge>
           </div>
@@ -140,13 +140,13 @@ export default function Home() {
                       </svg>
                     </div>
                     <div>
-                      <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-2">
+                      <h3 className="text-xl font-extrabold text-gray-900 dark:text-gray-100 flex items-center gap-2 tracking-tight">
                         每日背默5首
                         <span className="text-sm font-normal text-orange-600 dark:text-orange-400 bg-orange-100 dark:bg-orange-900/50 px-2 py-0.5 rounded-full">
                           🔥 热门
                         </span>
                       </h3>
-                      <p className="text-sm text-gray-600 dark:text-gray-300">
+                      <p className="text-sm font-semibold text-gray-700 dark:text-gray-200 leading-relaxed">
                         根据日期自动轮换，每天5首新诗词
                       </p>
                     </div>
@@ -282,13 +282,13 @@ export default function Home() {
                   <div className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent dark:from-blue-400 dark:to-indigo-400">
                     {mounted ? progress.learnedPoems.length : 0}
                   </div>
-                  <div className="text-sm text-gray-600 dark:text-gray-300 mt-1">📚 已学诗词</div>
+                  <div className="text-sm font-semibold text-gray-700 dark:text-gray-200 mt-1">📚 已学诗词</div>
                 </div>
                 <div className="rounded-xl bg-white p-4 shadow-md hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300 dark:bg-gray-700">
                   <div className="text-3xl font-bold bg-gradient-to-r from-green-600 to-teal-600 bg-clip-text text-transparent dark:from-green-400 dark:to-teal-400">
                     {mounted ? `${getAverageAccuracy()}%` : '0%'}
                   </div>
-                  <div className="text-sm text-gray-600 dark:text-gray-300 mt-1">⭐ 正确率</div>
+                  <div className="text-sm font-semibold text-gray-700 dark:text-gray-200 mt-1">⭐ 正确率</div>
                 </div>
               </div>
             </CardContent>
@@ -299,7 +299,7 @@ export default function Home() {
         <footer className="mt-12 text-center animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-800 rounded-full shadow-md">
             <span className="text-xl">💡</span>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
+            <p className="text-sm font-semibold text-gray-700 dark:text-gray-300 leading-relaxed">
               提示：先从练习模式开始，熟悉后再进行测试，加油！
             </p>
             <span className="text-xl">✨</span>

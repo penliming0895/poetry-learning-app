@@ -116,7 +116,7 @@ export default function PracticePage() {
                   )}
                 </div>
               </div>
-              <CardTitle className="text-3xl font-bold bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent dark:from-green-400 dark:to-blue-400">
+              <CardTitle className="text-3xl font-extrabold bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent dark:from-green-400 dark:to-blue-400 tracking-tight">
                 {score >= 80 ? '🎉 太棒了！' : score >= 60 ? '👍 继续加油！' : '💪 再接再厉！'}
               </CardTitle>
               <p className="text-lg text-gray-600 dark:text-gray-300 mt-2">练习完成！</p>
@@ -216,7 +216,7 @@ export default function PracticePage() {
           <CardHeader>
             <div className="flex items-center justify-between">
               <div className="flex-1">
-                <CardTitle className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent dark:from-blue-400 dark:to-purple-400">
+                <CardTitle className="text-3xl font-extrabold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent dark:from-blue-400 dark:to-purple-400 tracking-tight">
                   {currentPoetry.title}
                 </CardTitle>
                 <p className="text-base text-gray-600 dark:text-gray-300 mt-1 flex items-center gap-2">
@@ -256,7 +256,7 @@ export default function PracticePage() {
               {showHint && (
                 <div className="rounded-xl bg-gradient-to-r from-yellow-100 to-orange-100 p-4 text-center shadow-md dark:from-yellow-900/30 dark:to-orange-900/30 border-2 border-yellow-200 dark:border-yellow-800 animate-fade-in">
                   <span className="text-lg">💡 提示：</span>
-                  <span className="text-lg font-semibold text-yellow-800 dark:text-yellow-200">{getHint(currentPoetry.lines[currentLineIndex])}</span>
+                  <span className="text-lg font-extrabold text-yellow-800 dark:text-yellow-200 tracking-tight">{getHint(currentPoetry.lines[currentLineIndex])}</span>
                 </div>
               )}
 
@@ -264,7 +264,7 @@ export default function PracticePage() {
               <div className="rounded-xl bg-gradient-to-br from-gray-100 to-gray-200 p-6 shadow-inner dark:from-gray-800 dark:to-gray-900 border-2 border-gray-200 dark:border-gray-700">
                 <div className="text-center min-h-[80px] flex items-center justify-center">
                   {showAnswer ? (
-                    <div className="text-2xl font-bold text-gray-900 dark:text-gray-100 animate-fade-in">
+                    <div className="text-2xl font-extrabold text-gray-900 dark:text-gray-100 animate-fade-in tracking-tight">
                       {currentPoetry.lines[currentLineIndex]}
                     </div>
                   ) : (
