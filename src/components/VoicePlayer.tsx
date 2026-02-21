@@ -10,6 +10,21 @@ interface VoicePlayerProps {
   speaker?: 'zh_female_xueayi_saturn_bigtts' | 'zh_male_m191_uranus_bigtts';
 }
 
+// 全局音频缓存
+const audioCache = new Map<string, { url: string; timestamp: number }>();
+const CACHE_DURATION = 30 * 60 * 1000; // 30分钟缓存
+
+// 清理过期缓存
+setInterval(() => {
+  const now = Date.now();
+  audioCache.forEach((value, key) => {
+    if (now - value.timestamp > CACHE_DURATION) {
+      audioCache.delete(key);
+      console.log('🗑️ 清理过期缓存:', key.substring(0, 20) + '...');
+    }
+  });
+}, 5 * 60 * 1000); // 每5分钟清理一次
+
 export default function VoicePlayer({ text, className = '', speaker = 'zh_female_xueayi_saturn_bigtts' }: VoicePlayerProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -80,6 +95,18 @@ export default function VoicePlayer({ text, className = '', speaker = 'zh_female
     isInitializing.current = true;
 
     try {
+      // 检查缓存
+      const cacheKey = `${text}-${speaker}`;
+      const cached = audioCache.get(cacheKey);
+
+      if (cached) {
+        console.log('⚡ 使用缓存音频');
+        setAudioUrl(cached.url);
+        await new Promise(resolve => setTimeout(resolve, 100));
+        createAndPlayAudio(cached.url);
+        return;
+      }
+
       console.log('📡 调用 TTS API...');
       const response = await fetch('/api/tts', {
         method: 'POST',
@@ -96,6 +123,14 @@ export default function VoicePlayer({ text, className = '', speaker = 'zh_female
 
       const data = await response.json();
       console.log('✅ 音频生成成功:', { uri: data.audioUri, size: data.audioSize });
+
+      // 保存到缓存
+      audioCache.set(cacheKey, {
+        url: data.audioUri,
+        timestamp: Date.now()
+      });
+      console.log('💾 已保存到缓存');
+
       setAudioUrl(data.audioUri);
 
       // 等待状态更新
