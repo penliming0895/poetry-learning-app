@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>点击测试</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+        }
+        .card h2 {
+            margin: 0 0 10px 0;
+            color: #333;
+        }
+        .card p {
+            margin: 0;
+            color: #666;
+        }
+        .button {
+            display: inline-block;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            transition: opacity 0.2s;
+        }
+        .button:hover {
+            opacity: 0.9;
+        }
+        .log {
+            background: #1e1e1e;
+            color: #00ff00;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: monospace;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 style="color: white; text-align: center;">🔍 点击功能测试</h1>
+        <p style="color: white; text-align: center; margin-bottom: 30px;">
+            如果下面任何一个链接能正常跳转，说明功能正常
+        </p>
+
+        <div class="card" onclick="handleClick('daily')">
+            <h2>📅 每日背默5首</h2>
+            <p>点击这里跳转到 /daily</p>
+            <br>
+            <button class="button" onclick="event.stopPropagation(); window.location.href='/daily'">
+                开始今日任务 🚀
+            </button>
+        </div>
+
+        <div class="card" onclick="handleClick('practice')">
+            <h2>📖 背诵练习模式</h2>
+            <p>点击这里跳转到 /practice</p>
+            <br>
+            <a href="/practice" class="button" onclick="event.stopPropagation();">
+                开始练习 💪
+            </a>
+        </div>
+
+        <div class="card">
+            <h2>✍️ 默写测试模式</h2>
+            <p>点击这里跳转到 /test</p>
+            <br>
+            <a href="/test" class="button">
+                开始测试 🎯
+            </a>
+        </div>
+
+        <div class="card">
+            <h2>📋 错题本</h2>
+            <p>点击这里跳转到 /wrongbook</p>
+            <br>
+            <a href="/wrongbook" class="button">
+                查看错题本 📋
+            </a>
+        </div>
+
+        <div class="log" id="log">
+            <div>点击日志将显示在这里...</div>
+        </div>
+    </div>
+
+    <script>
+        function handleClick(type) {
+            const log = document.getElementById('log');
+            const timestamp = new Date().toLocaleTimeString();
+            log.innerHTML = `<div>[${timestamp}] 点击了卡片: ${type}</div>` + log.innerHTML;
+
+            setTimeout(() => {
+                window.location.href = '/' + type;
+            }, 500);
+        }
+
+        document.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                const log = document.getElementById('log');
+                const timestamp = new Date().toLocaleTimeString();
+                const href = this.getAttribute('href');
+                log.innerHTML = `<div>[${timestamp}] 点击了链接: ${href}</div>` + log.innerHTML;
+            });
+        });
+
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                const log = document.getElementById('log');
+                const timestamp = new Date().toLocaleTimeString();
+                log.innerHTML = `<div>[${timestamp}] 点击了按钮</div>` + log.innerHTML;
+            });
+        });
+
+        console.log('测试页面已加载');
+        console.log('点击任何卡片或按钮，日志会显示在页面上');
+    </script>
+</body>
+</html>
