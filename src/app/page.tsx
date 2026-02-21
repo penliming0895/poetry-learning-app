@@ -41,9 +41,9 @@ export default function Home() {
     <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-purple-900">
       {/* 装饰性背景 */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-blue-400 rounded-full mix-blend-multiply opacity-8 animate-pulse"></div>
-        <div className="absolute top-20 right-10 w-72 h-72 bg-purple-400 rounded-full mix-blend-multiply opacity-8 animate-pulse" style={{ animationDelay: '1s' }}></div>
-        <div className="absolute bottom-20 left-1/2 w-72 h-72 bg-pink-400 rounded-full mix-blend-multiply opacity-8 animate-pulse" style={{ animationDelay: '2s' }}></div>
+        <img src="/lotus_1.png" alt="水墨荷花" className="absolute top-10 left-5 w-80 h-80 object-contain opacity-15 animate-pulse mix-blend-multiply" />
+        <img src="/lotus_2.png" alt="水墨荷花" className="absolute top-10 right-5 w-80 h-80 object-contain opacity-15 animate-pulse mix-blend-multiply" style={{ animationDelay: '1s' }} />
+        <div className="absolute bottom-20 left-1/2 -translate-x-1/2 w-72 h-72 bg-pink-400 rounded-full mix-blend-multiply opacity-8 animate-pulse" style={{ animationDelay: '2s' }}></div>
       </div>
 
       {/* 浮动emoji装饰 */}
