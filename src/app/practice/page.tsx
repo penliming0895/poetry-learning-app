@@ -95,8 +95,8 @@ export default function PracticePage() {
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-purple-900 p-4 relative overflow-hidden">
         {/* 装饰背景 */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-1/4 left-10 w-64 h-64 bg-green-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
-          <div className="absolute top-1/4 right-10 w-64 h-64 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse" style={{ animationDelay: '1s' }}></div>
+          <div className="absolute top-1/4 left-10 w-64 h-64 bg-green-400 rounded-full mix-blend-multiply filter blur-2xl opacity-15 animate-pulse"></div>
+          <div className="absolute top-1/4 right-10 w-64 h-64 bg-blue-400 rounded-full mix-blend-multiply filter blur-2xl opacity-15 animate-pulse" style={{ animationDelay: '1s' }}></div>
         </div>
 
         <div className="container mx-auto max-w-2xl py-8 relative z-10">
@@ -122,7 +122,7 @@ export default function PracticePage() {
               <p className="text-lg text-gray-600 dark:text-gray-300 mt-2">练习完成！</p>
             </CardHeader>
             <CardContent className="space-y-6 relative z-10">
-              <div className="text-center p-6 rounded-xl bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm shadow-md">
+              <div className="text-center p-6 rounded-xl bg-white dark:bg-gray-800 shadow-md">
                 <div className={`mb-2 text-6xl font-bold animate-pulse ${
                   score >= 80 ? 'bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent' :
                   score >= 60 ? 'bg-gradient-to-r from-yellow-600 to-orange-600 bg-clip-text text-transparent' :
@@ -179,8 +179,8 @@ export default function PracticePage() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-purple-900 p-4 relative overflow-hidden">
       {/* 装饰背景 */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
-        <div className="absolute bottom-20 right-10 w-72 h-72 bg-purple-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse" style={{ animationDelay: '1.5s' }}></div>
+        <div className="absolute top-20 left-10 w-72 h-72 bg-blue-400 rounded-full mix-blend-multiply filter blur-2xl opacity-15 animate-pulse"></div>
+        <div className="absolute bottom-20 right-10 w-72 h-72 bg-purple-400 rounded-full mix-blend-multiply filter blur-2xl opacity-15 animate-pulse" style={{ animationDelay: '1.5s' }}></div>
       </div>
 
       <div className="container mx-auto max-w-3xl py-8 relative z-10">
@@ -198,7 +198,7 @@ export default function PracticePage() {
         </div>
 
         {/* 进度条 */}
-        <div className="mb-6 rounded-xl bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-4 shadow-md border-2 border-blue-200 dark:border-blue-800">
+        <div className="mb-6 rounded-xl bg-white dark:bg-gray-800 p-4 shadow-md border-2 border-blue-200 dark:border-blue-800">
           <div className="mb-2 flex justify-between text-sm text-gray-600 dark:text-gray-300">
             <span className="flex items-center gap-1">
               <Zap className="h-4 w-4 text-yellow-500" />

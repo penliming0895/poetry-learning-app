@@ -41,9 +41,9 @@ export default function Home() {
     <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-purple-900">
       {/* 装饰性背景 */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
-        <div className="absolute top-20 right-10 w-72 h-72 bg-purple-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse" style={{ animationDelay: '1s' }}></div>
-        <div className="absolute bottom-20 left-1/2 w-72 h-72 bg-pink-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse" style={{ animationDelay: '2s' }}></div>
+        <div className="absolute top-20 left-10 w-72 h-72 bg-blue-400 rounded-full mix-blend-multiply filter blur-2xl opacity-15 animate-pulse"></div>
+        <div className="absolute top-20 right-10 w-72 h-72 bg-purple-400 rounded-full mix-blend-multiply filter blur-2xl opacity-15 animate-pulse" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute bottom-20 left-1/2 w-72 h-72 bg-pink-400 rounded-full mix-blend-multiply filter blur-2xl opacity-15 animate-pulse" style={{ animationDelay: '2s' }}></div>
       </div>
 
       {/* 浮动emoji装饰 */}
@@ -278,19 +278,13 @@ export default function Home() {
             </CardHeader>
             <CardContent className="relative z-10">
               <div className="grid grid-cols-3 gap-4 text-center">
-                <div className="rounded-xl bg-white p-4 shadow-md hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300 dark:bg-gray-700/80 backdrop-blur-sm">
+                <div className="rounded-xl bg-white p-4 shadow-md hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300 dark:bg-gray-700">
                   <div className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent dark:from-blue-400 dark:to-indigo-400">
                     {mounted ? progress.learnedPoems.length : 0}
                   </div>
                   <div className="text-sm text-gray-600 dark:text-gray-300 mt-1">📚 已学诗词</div>
                 </div>
-                <div className="rounded-xl bg-white p-4 shadow-md hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300 dark:bg-gray-700/80 backdrop-blur-sm">
-                  <div className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent dark:from-purple-400 dark:to-pink-400">
-                    {mounted ? progress.testCount : 0}
-                  </div>
-                  <div className="text-sm text-gray-600 dark:text-gray-300 mt-1">🎯 测试次数</div>
-                </div>
-                <div className="rounded-xl bg-white p-4 shadow-md hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300 dark:bg-gray-700/80 backdrop-blur-sm">
+                <div className="rounded-xl bg-white p-4 shadow-md hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300 dark:bg-gray-700">
                   <div className="text-3xl font-bold bg-gradient-to-r from-green-600 to-teal-600 bg-clip-text text-transparent dark:from-green-400 dark:to-teal-400">
                     {mounted ? `${getAverageAccuracy()}%` : '0%'}
                   </div>
@@ -303,7 +297,7 @@ export default function Home() {
 
         {/* 底部提示 */}
         <footer className="mt-12 text-center animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/80 dark:bg-gray-800/80 rounded-full shadow-md backdrop-blur-sm">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-800 rounded-full shadow-md">
             <span className="text-xl">💡</span>
             <p className="text-sm text-gray-600 dark:text-gray-400">
               提示：先从练习模式开始，熟悉后再进行测试，加油！
