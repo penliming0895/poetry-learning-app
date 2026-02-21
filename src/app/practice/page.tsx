@@ -22,7 +22,7 @@ export default function PracticePage() {
   const [completed, setCompleted] = useState(false);
   const [correctCount, setCorrectCount] = useState(0);
   const [showHint, setShowHint] = useState(false);
-  const { recordPractice } = useGameProgress();
+  const { recordPractice, recordWrongLine } = useGameProgress();
 
   // 如果有poemId，跳转到对应的诗词
   useEffect(() => {
@@ -41,6 +41,15 @@ export default function PracticePage() {
   const handleNextLine = (isCorrect: boolean) => {
     if (isCorrect) {
       setCorrectCount(prev => prev + 1);
+    } else {
+      // 记录答错的句子
+      recordWrongLine(
+        currentPoetry.id,
+        currentPoetry.title,
+        currentLineIndex,
+        currentPoetry.lines[currentLineIndex],
+        currentPoetry.author
+      );
     }
 
     if (currentLineIndex < totalLines - 1) {

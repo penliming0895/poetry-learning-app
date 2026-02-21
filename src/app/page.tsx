@@ -5,12 +5,17 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { BookOpen, PenTool, Trophy, GraduationCap } from 'lucide-react';
+import { BookOpen, PenTool, Trophy, GraduationCap, AlertCircle } from 'lucide-react';
 import { useGameProgress } from '@/hooks/useGameProgress';
 
 export default function Home() {
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);
-  const { progress, getAverageAccuracy, mounted } = useGameProgress();
+  const { progress, getAverageAccuracy, getUnmasteredWrong, mounted } = useGameProgress();
+
+  // 计算错题总数
+  const wrongPoetryCount = getUnmasteredWrong('poetry').length;
+  const wrongLineCount = getUnmasteredWrong('line').length;
+  const totalWrongCount = wrongPoetryCount + wrongLineCount;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-purple-900">
@@ -96,6 +101,49 @@ export default function Home() {
             </Card>
           </Link>
         </div>
+
+        {/* 错题本入口 */}
+        {totalWrongCount > 0 && (
+          <div className="mb-12">
+            <Link href="/wrongbook" className="group">
+              <Card
+                className={`cursor-pointer border-2 border-red-500 transition-all duration-300 ${
+                  hoveredCard === 'wrongbook'
+                    ? 'scale-105 shadow-xl'
+                    : 'hover:scale-102 hover:shadow-lg'
+                }`}
+                onMouseEnter={() => setHoveredCard('wrongbook')}
+                onMouseLeave={() => setHoveredCard(null)}
+              >
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-gradient-to-br from-red-400 to-orange-500 text-white">
+                        <AlertCircle className="h-8 w-8" />
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">
+                          错题本
+                        </h3>
+                        <p className="text-sm text-gray-600 dark:text-gray-300">
+                          共有 {totalWrongCount} 道错题需要复习
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Badge variant="destructive" className="text-lg px-3 py-1">
+                        {totalWrongCount}
+                      </Badge>
+                      <Button variant="outline" className="ml-2">
+                        查看错题
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
+          </div>
+        )}
 
         {/* 游戏模式选择 */}
         <div className="mb-12">

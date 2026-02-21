@@ -1,10 +1,13 @@
 import { useState, useEffect } from 'react';
+import { WrongPoetry, WrongLine } from '@/types/poetry';
 
 export interface GameProgress {
   learnedPoems: string[]; // 已学习的诗词ID列表
   testCount: number; // 测试次数
   totalScore: number; // 总得分
   bestScores: Record<string, number>; // 每首诗词的最佳得分
+  wrongPoetryList: WrongPoetry[]; // 错题列表（整首）
+  wrongLineList: WrongLine[]; // 错题列表（单句）
 }
 
 const STORAGE_KEY = 'poetry-game-progress';
@@ -14,6 +17,8 @@ const defaultProgress: GameProgress = {
   testCount: 0,
   totalScore: 0,
   bestScores: {},
+  wrongPoetryList: [],
+  wrongLineList: [],
 };
 
 export const useGameProgress = () => {
@@ -103,6 +108,123 @@ export const useGameProgress = () => {
     return progress.bestScores[poetryId] || 0;
   };
 
+  // 记录整首诗词错题
+  const recordWrongPoetry = (
+    poetryId: string,
+    poetryTitle: string,
+    author: string,
+    dynasty: string,
+    category: string
+  ) => {
+    setProgress(prev => {
+      const existingIndex = prev.wrongPoetryList.findIndex(wp => wp.poetryId === poetryId);
+      const wrongPoetry: WrongPoetry = {
+        poetryId,
+        poetryTitle,
+        author,
+        dynasty,
+        category,
+        wrongCount: existingIndex !== -1 ? prev.wrongPoetryList[existingIndex].wrongCount + 1 : 1,
+        lastWrongDate: Date.now(),
+        mastered: false,
+      };
+
+      const newWrongList = existingIndex !== -1
+        ? prev.wrongPoetryList.map((wp, idx) => idx === existingIndex ? wrongPoetry : wp)
+        : [...prev.wrongPoetryList, wrongPoetry];
+
+      return {
+        ...prev,
+        wrongPoetryList: newWrongList,
+      };
+    });
+  };
+
+  // 记录单句错题
+  const recordWrongLine = (
+    poetryId: string,
+    poetryTitle: string,
+    lineIndex: number,
+    lineContent: string,
+    author: string
+  ) => {
+    setProgress(prev => {
+      // 查找是否已经存在该诗词该句的错题
+      const existingIndex = prev.wrongLineList.findIndex(
+        wl => wl.poetryId === poetryId && wl.lineIndex === lineIndex
+      );
+
+      const wrongLine: WrongLine = {
+        poetryId,
+        poetryTitle,
+        lineIndex,
+        lineContent,
+        author,
+        wrongCount: existingIndex !== -1 ? prev.wrongLineList[existingIndex].wrongCount + 1 : 1,
+        lastWrongDate: Date.now(),
+        mastered: false,
+      };
+
+      const newWrongList = existingIndex !== -1
+        ? prev.wrongLineList.map((wl, idx) => idx === existingIndex ? wrongLine : wl)
+        : [...prev.wrongLineList, wrongLine];
+
+      return {
+        ...prev,
+        wrongLineList: newWrongList,
+      };
+    });
+  };
+
+  // 标记错题为已掌握
+  const markAsMastered = (type: 'poetry' | 'line', poetryId: string, lineIndex?: number) => {
+    setProgress(prev => {
+      if (type === 'poetry') {
+        return {
+          ...prev,
+          wrongPoetryList: prev.wrongPoetryList.map(wp =>
+            wp.poetryId === poetryId ? { ...wp, mastered: true } : wp
+          ),
+        };
+      } else {
+        return {
+          ...prev,
+          wrongLineList: prev.wrongLineList.map(wl =>
+            wl.poetryId === poetryId && wl.lineIndex === lineIndex
+              ? { ...wl, mastered: true }
+              : wl
+          ),
+        };
+      }
+    });
+  };
+
+  // 清除已掌握的错题
+  const clearMastered = (type: 'poetry' | 'line') => {
+    setProgress(prev => {
+      if (type === 'poetry') {
+        return {
+          ...prev,
+          wrongPoetryList: prev.wrongPoetryList.filter(wp => !wp.mastered),
+        };
+      } else {
+        return {
+          ...prev,
+          wrongLineList: prev.wrongLineList.filter(wl => !wl.mastered),
+        };
+      }
+    });
+  };
+
+  // 获取未掌握的错题
+  const getUnmasteredWrong = (type: 'poetry' | 'line'): WrongPoetry[] | WrongLine[] => {
+    if (type === 'poetry') {
+      return progress.wrongPoetryList.filter(wp => !wp.mastered);
+    } else {
+      return progress.wrongLineList.filter(wl => !wl.mastered);
+    }
+  };
+
   return {
     progress,
     recordPractice,
@@ -110,6 +232,11 @@ export const useGameProgress = () => {
     getAverageAccuracy,
     resetProgress,
     getBestScore,
+    recordWrongPoetry,
+    recordWrongLine,
+    markAsMastered,
+    clearMastered,
+    getUnmasteredWrong,
     mounted,
   };
 };

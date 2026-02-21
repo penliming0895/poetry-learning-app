@@ -21,7 +21,7 @@ export default function TestPage() {
   const [submitted, setSubmitted] = useState(false);
   const [score, setScore] = useState(0);
   const [matchedLines, setMatchedLines] = useState<number[]>([]);
-  const { recordTest } = useGameProgress();
+  const { recordTest, recordWrongPoetry } = useGameProgress();
 
   // 如果有poemId，自动选择对应的诗词
   useEffect(() => {
@@ -74,6 +74,17 @@ export default function TestPage() {
 
     // 记录测试进度
     recordTest(selectedPoetry.id, finalScore);
+
+    // 如果得分低于60分，记录为错题
+    if (finalScore < 60) {
+      recordWrongPoetry(
+        selectedPoetry.id,
+        selectedPoetry.title,
+        selectedPoetry.author,
+        selectedPoetry.dynasty,
+        selectedPoetry.category
+      );
+    }
   };
 
   const handleReset = () => {
