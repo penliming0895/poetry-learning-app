@@ -44,7 +44,7 @@ export default function Home() {
         <img 
           src="/lotus_custom.jpg" 
           alt="荷花" 
-          className="absolute top-5 right-0 w-96 h-96 object-cover opacity-12 mix-blend-multiply" 
+          className="absolute top-10 right-10 w-48 h-48 object-contain opacity-10 mix-blend-multiply" 
         />
         <div className="absolute bottom-20 left-1/2 -translate-x-1/2 w-72 h-72 bg-pink-400 rounded-full mix-blend-multiply opacity-8 animate-pulse" style={{ animationDelay: '2s' }}></div>
       </div>
