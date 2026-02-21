@@ -12,9 +12,9 @@ export default function Home() {
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);
   const { progress, getAverageAccuracy, getUnmasteredWrong, mounted } = useGameProgress();
 
-  // 计算错题总数
-  const wrongPoetryCount = getUnmasteredWrong('poetry').length;
-  const wrongLineCount = getUnmasteredWrong('line').length;
+  // 计算错题总数（只在 mounted 后计算）
+  const wrongPoetryCount = mounted ? getUnmasteredWrong('poetry').length : 0;
+  const wrongLineCount = mounted ? getUnmasteredWrong('line').length : 0;
   const totalWrongCount = wrongPoetryCount + wrongLineCount;
 
   return (

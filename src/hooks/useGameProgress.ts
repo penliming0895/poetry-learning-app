@@ -30,7 +30,14 @@ export const useGameProgress = () => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
-        setProgress(JSON.parse(saved));
+        const parsed = JSON.parse(saved);
+        // 合并默认值，确保新字段存在
+        setProgress({
+          ...defaultProgress,
+          ...parsed,
+          wrongPoetryList: parsed.wrongPoetryList || [],
+          wrongLineList: parsed.wrongLineList || [],
+        });
       }
     } catch (error) {
       console.error('Failed to load progress:', error);
@@ -218,10 +225,14 @@ export const useGameProgress = () => {
 
   // 获取未掌握的错题
   const getUnmasteredWrong = (type: 'poetry' | 'line'): WrongPoetry[] | WrongLine[] => {
+    // 确保数组存在
+    const wrongPoetryList = progress.wrongPoetryList || [];
+    const wrongLineList = progress.wrongLineList || [];
+
     if (type === 'poetry') {
-      return progress.wrongPoetryList.filter(wp => !wp.mastered);
+      return wrongPoetryList.filter(wp => !wp.mastered);
     } else {
-      return progress.wrongLineList.filter(wl => !wl.mastered);
+      return wrongLineList.filter(wl => !wl.mastered);
     }
   };
 

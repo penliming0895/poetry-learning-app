@@ -20,12 +20,12 @@ export default function WrongBookPage() {
     mounted,
   } = useGameProgress();
 
-  const wrongPoetryList = getUnmasteredWrong('poetry') as WrongPoetry[];
-  const wrongLineList = getUnmasteredWrong('line') as WrongLine[];
-
   if (!mounted) {
     return <div>加载中...</div>;
   }
+
+  const wrongPoetryList = getUnmasteredWrong('poetry') as WrongPoetry[];
+  const wrongLineList = getUnmasteredWrong('line') as WrongLine[];
 
   const formatDate = (timestamp: number) => {
     const date = new Date(timestamp);
