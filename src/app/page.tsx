@@ -108,10 +108,7 @@ export default function Home() {
             今日任务
             <Sparkles className="h-6 w-6 text-yellow-500" />
           </h2>
-          <div 
-            className="group block cursor-pointer"
-            onClick={() => window.location.href = '/daily'}
-          >
+          <a href="/daily" className="group block cursor-pointer text-decoration-none hover:text-inherit">
             <Card
               className={`border-2 transition-all duration-300 overflow-hidden ${
                 hoveredCard === 'daily'
@@ -139,19 +136,15 @@ export default function Home() {
                       </p>
                     </div>
                   </div>
-                  <Button 
+                  <Button
                     className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      window.location.href = '/daily';
-                    }}
                   >
                     开始今日任务 🚀
                   </Button>
                 </div>
               </CardContent>
             </Card>
-          </div>
+          </a>
         </div>
 
         {/* 游戏模式选择 */}
@@ -163,10 +156,7 @@ export default function Home() {
           </h2>
           <div className="grid gap-6 md:grid-cols-3">
             {/* 练习模式 */}
-            <div 
-              className="group block cursor-pointer"
-              onClick={() => window.location.href = '/practice'}
-            >
+            <a href="/practice" className="group block cursor-pointer text-decoration-none hover:text-inherit">
               <Card
                 className={`transition-all duration-300 h-full ${
                   hoveredCard === 'practice'
@@ -186,24 +176,17 @@ export default function Home() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <Button 
+                  <Button
                     className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      window.location.href = '/practice';
-                    }}
                   >
                     开始练习 💪
                   </Button>
                 </CardContent>
               </Card>
-            </div>
+            </a>
 
             {/* 测试模式 */}
-            <div 
-              className="group block cursor-pointer"
-              onClick={() => window.location.href = '/test'}
-            >
+            <a href="/test" className="group block cursor-pointer text-decoration-none hover:text-inherit">
               <Card
                 className={`transition-all duration-300 h-full ${
                   hoveredCard === 'test'
@@ -223,24 +206,17 @@ export default function Home() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <Button 
+                  <Button
                     className="w-full bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      window.location.href = '/test';
-                    }}
                   >
                     开始测试 🎯
                   </Button>
                 </CardContent>
               </Card>
-            </div>
+            </a>
 
             {/* 错题本 */}
-            <div 
-              className="group block cursor-pointer"
-              onClick={() => window.location.href = '/wrongbook'}
-            >
+            <a href="/wrongbook" className="group block cursor-pointer text-decoration-none hover:text-inherit">
               <Card
                 className={`transition-all duration-300 h-full ${
                   hoveredCard === 'wrongbook'
@@ -269,16 +245,12 @@ export default function Home() {
                         ? 'bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600'
                         : ''
                     }`}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      window.location.href = '/wrongbook';
-                    }}
                   >
                     {totalWrongCount > 0 ? '开始复习 🔥' : '查看错题本 📋'}
                   </Button>
                 </CardContent>
               </Card>
-            </div>
+            </a>
           </div>
         </div>
 
