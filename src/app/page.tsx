@@ -136,7 +136,13 @@ export default function Home() {
                       </p>
                     </div>
                   </div>
-                  <Button className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300">
+                  <Button 
+                    className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      window.location.href = '/daily';
+                    }}
+                  >
                     开始今日任务 🚀
                   </Button>
                 </div>
@@ -174,7 +180,13 @@ export default function Home() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <Button className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300">
+                  <Button 
+                    className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      window.location.href = '/practice';
+                    }}
+                  >
                     开始练习 💪
                   </Button>
                 </CardContent>
@@ -202,7 +214,13 @@ export default function Home() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <Button className="w-full bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300">
+                  <Button 
+                    className="w-full bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      window.location.href = '/test';
+                    }}
+                  >
                     开始测试 🎯
                   </Button>
                 </CardContent>
@@ -239,6 +257,10 @@ export default function Home() {
                         ? 'bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600'
                         : ''
                     }`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      window.location.href = '/wrongbook';
+                    }}
                   >
                     {totalWrongCount > 0 ? '开始复习 🔥' : '查看错题本 📋'}
                   </Button>
