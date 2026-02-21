@@ -9,6 +9,7 @@ import { Progress } from '@/components/ui/progress';
 import { ArrowLeft, Calendar, BookOpen, CheckCircle2, Circle, Play, Sparkles, Star, Trophy, Flame } from 'lucide-react';
 import { getDailyPoetry } from '@/data/poetryData';
 import VoicePlayer from '@/components/VoicePlayer';
+import BackgroundMusic from '@/components/BackgroundMusic';
 import { Poetry } from '@/types/poetry';
 import { useGameProgress } from '@/hooks/useGameProgress';
 
@@ -299,6 +300,9 @@ export default function DailyPage() {
           animation: fade-in-up 0.6s ease-out;
         }
       `}</style>
+
+      {/* 背景音乐 */}
+      <BackgroundMusic />
     </div>
   );
 }

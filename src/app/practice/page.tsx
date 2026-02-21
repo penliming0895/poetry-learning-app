@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { ArrowLeft, BookOpen, Eye, EyeOff, CheckCircle, XCircle, Lightbulb, Sparkles, Star, Zap } from 'lucide-react';
 import VoicePlayer from '@/components/VoicePlayer';
+import BackgroundMusic from '@/components/BackgroundMusic';
 import { poetryDatabase, getPoetryById } from '@/data/poetryData';
 import { Poetry } from '@/types/poetry';
 import { useGameProgress } from '@/hooks/useGameProgress';
@@ -338,6 +339,9 @@ export default function PracticePage() {
           </Card>
         )}
       </div>
+
+      {/* 背景音乐 */}
+      <BackgroundMusic />
 
       <style jsx global>{`
         @keyframes fade-in {
