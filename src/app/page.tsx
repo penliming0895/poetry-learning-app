@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { BookOpen, PenTool, Trophy, GraduationCap, AlertCircle, Sparkles, Star } from 'lucide-react';
 import { useGameProgress } from '@/hooks/useGameProgress';
-import { StudyReminderButton } from '@/components/StudyReminder';
+// import { StudyReminderButton } from '@/components/StudyReminder';
 
 export default function Home() {
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);
@@ -56,7 +56,7 @@ export default function Home() {
       {/* 清除缓存链接和学习提醒 */}
       {mounted && (
         <div className="fixed top-2 right-2 z-50 flex items-center gap-4">
-          <StudyReminderButton />
+          {/* <StudyReminderButton /> */}
           <Link
             href="/clear-cache"
             className="text-xs text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 transition-colors"
@@ -108,9 +108,12 @@ export default function Home() {
             今日任务
             <Sparkles className="h-6 w-6 text-yellow-500" />
           </h2>
-          <Link href="/daily" className="group block">
+          <div 
+            className="group block cursor-pointer"
+            onClick={() => window.location.href = '/daily'}
+          >
             <Card
-              className={`cursor-pointer border-2 transition-all duration-300 overflow-hidden ${
+              className={`border-2 transition-all duration-300 overflow-hidden ${
                 hoveredCard === 'daily'
                   ? 'scale-[1.02] border-orange-500 shadow-2xl bg-gradient-to-br from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20'
                   : 'hover:scale-[1.01] hover:shadow-xl border-orange-200'
@@ -139,7 +142,7 @@ export default function Home() {
                   <Button 
                     className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300"
                     onClick={(e) => {
-                      e.preventDefault();
+                      e.stopPropagation();
                       window.location.href = '/daily';
                     }}
                   >
@@ -148,7 +151,7 @@ export default function Home() {
                 </div>
               </CardContent>
             </Card>
-          </Link>
+          </div>
         </div>
 
         {/* 游戏模式选择 */}
@@ -160,9 +163,12 @@ export default function Home() {
           </h2>
           <div className="grid gap-6 md:grid-cols-3">
             {/* 练习模式 */}
-            <Link href="/practice" className="group block">
+            <div 
+              className="group block cursor-pointer"
+              onClick={() => window.location.href = '/practice'}
+            >
               <Card
-                className={`cursor-pointer transition-all duration-300 h-full ${
+                className={`transition-all duration-300 h-full ${
                   hoveredCard === 'practice'
                     ? 'scale-[1.02] border-blue-500 shadow-2xl bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20'
                     : 'hover:scale-[1.01] hover:shadow-xl border-blue-200'
@@ -183,7 +189,7 @@ export default function Home() {
                   <Button 
                     className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300"
                     onClick={(e) => {
-                      e.preventDefault();
+                      e.stopPropagation();
                       window.location.href = '/practice';
                     }}
                   >
@@ -191,12 +197,15 @@ export default function Home() {
                   </Button>
                 </CardContent>
               </Card>
-            </Link>
+            </div>
 
             {/* 测试模式 */}
-            <Link href="/test" className="group block">
+            <div 
+              className="group block cursor-pointer"
+              onClick={() => window.location.href = '/test'}
+            >
               <Card
-                className={`cursor-pointer transition-all duration-300 h-full ${
+                className={`transition-all duration-300 h-full ${
                   hoveredCard === 'test'
                     ? 'scale-[1.02] border-purple-500 shadow-2xl bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20'
                     : 'hover:scale-[1.01] hover:shadow-xl border-purple-200'
@@ -225,12 +234,15 @@ export default function Home() {
                   </Button>
                 </CardContent>
               </Card>
-            </Link>
+            </div>
 
             {/* 错题本 */}
-            <Link href="/wrongbook" className="group block">
+            <div 
+              className="group block cursor-pointer"
+              onClick={() => window.location.href = '/wrongbook'}
+            >
               <Card
-                className={`cursor-pointer transition-all duration-300 h-full ${
+                className={`transition-all duration-300 h-full ${
                   hoveredCard === 'wrongbook'
                     ? 'scale-[1.02] border-red-500 shadow-2xl bg-gradient-to-br from-red-50 to-orange-50 dark:from-red-900/20 dark:to-orange-900/20'
                     : 'hover:scale-[1.01] hover:shadow-xl border-red-200'
@@ -258,7 +270,7 @@ export default function Home() {
                         : ''
                     }`}
                     onClick={(e) => {
-                      e.preventDefault();
+                      e.stopPropagation();
                       window.location.href = '/wrongbook';
                     }}
                   >
@@ -266,7 +278,7 @@ export default function Home() {
                   </Button>
                 </CardContent>
               </Card>
-            </Link>
+            </div>
           </div>
         </div>
 
