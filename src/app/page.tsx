@@ -114,55 +114,12 @@ export default function Home() {
           </Link>
         </div>
 
-        {/* 错题本入口 */}
-        {totalWrongCount > 0 && (
-          <div className="mb-12">
-            <Link href="/wrongbook" className="group">
-              <Card
-                className={`cursor-pointer border-2 border-red-500 transition-all duration-300 ${
-                  hoveredCard === 'wrongbook'
-                    ? 'scale-105 shadow-xl'
-                    : 'hover:scale-102 hover:shadow-lg'
-                }`}
-                onMouseEnter={() => setHoveredCard('wrongbook')}
-                onMouseLeave={() => setHoveredCard(null)}
-              >
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                      <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-gradient-to-br from-red-400 to-orange-500 text-white">
-                        <AlertCircle className="h-8 w-8" />
-                      </div>
-                      <div>
-                        <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">
-                          错题本
-                        </h3>
-                        <p className="text-sm text-gray-600 dark:text-gray-300">
-                          共有 {totalWrongCount} 道错题需要复习
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Badge variant="destructive" className="text-lg px-3 py-1">
-                        {totalWrongCount}
-                      </Badge>
-                      <Button variant="outline" className="ml-2">
-                        查看错题
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </Link>
-          </div>
-        )}
-
         {/* 游戏模式选择 */}
         <div className="mb-12">
           <h2 className="mb-6 text-center text-2xl font-semibold text-gray-800 dark:text-gray-100">
             选择游戏模式
           </h2>
-          <div className="grid gap-6 md:grid-cols-2">
+          <div className="grid gap-6 md:grid-cols-3">
             {/* 练习模式 */}
             <Link href="/practice" className="group">
               <Card
@@ -214,6 +171,39 @@ export default function Home() {
                 <CardContent>
                   <Button className="w-full bg-purple-600 hover:bg-purple-700 dark:bg-purple-700 dark:hover:bg-purple-800">
                     开始测试
+                  </Button>
+                </CardContent>
+              </Card>
+            </Link>
+
+            {/* 错题本 */}
+            <Link href="/wrongbook" className="group">
+              <Card
+                className={`cursor-pointer transition-all duration-300 ${
+                  hoveredCard === 'wrongbook'
+                    ? 'scale-105 border-red-500 shadow-xl'
+                    : 'hover:scale-102 hover:shadow-lg'
+                }`}
+                onMouseEnter={() => setHoveredCard('wrongbook')}
+                onMouseLeave={() => setHoveredCard(null)}
+              >
+                <CardHeader>
+                  <div className="mb-2 flex h-12 w-12 items-center justify-center rounded-lg bg-red-100 dark:bg-red-900">
+                    <AlertCircle className="h-6 w-6 text-red-600 dark:text-red-400" />
+                  </div>
+                  <CardTitle className="text-xl">错题本</CardTitle>
+                  <CardDescription>
+                    {totalWrongCount > 0
+                      ? `${totalWrongCount} 道错题等待复习`
+                      : '记录错题，重点复习'}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Button
+                    variant={totalWrongCount > 0 ? 'destructive' : 'outline'}
+                    className="w-full"
+                  >
+                    {totalWrongCount > 0 ? '开始复习' : '查看错题本'}
                   </Button>
                 </CardContent>
               </Card>
