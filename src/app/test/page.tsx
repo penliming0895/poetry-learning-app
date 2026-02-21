@@ -335,12 +335,15 @@ export default function TestPage() {
       <div className="container mx-auto max-w-4xl py-8 relative z-10">
         {/* 顶部导航 */}
         <div className="mb-6 flex items-center justify-between">
-          <Link href="/test">
-            <Button variant="ghost" size="sm" className="hover:bg-purple-100 dark:hover:bg-purple-900/30 transition-colors">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              返回选择
-            </Button>
-          </Link>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="hover:bg-purple-100 dark:hover:bg-purple-900/30 transition-colors"
+            onClick={() => setSelectedPoetry(null)}
+          >
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            返回选择
+          </Button>
           <Badge variant="secondary" className="px-3 py-1 bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300 border-2 border-purple-200 dark:border-purple-800">
             ⭐ {selectedPoetry.difficulty === 'easy' ? '简单' : selectedPoetry.difficulty === 'medium' ? '中等' : '困难'}
           </Badge>

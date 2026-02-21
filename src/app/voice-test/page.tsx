@@ -3,13 +3,33 @@
 import { useState } from 'react';
 import VoicePlayer from '@/components/VoicePlayer';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { ArrowLeft } from 'lucide-react';
+import Link from 'next/link';
 
 export default function VoiceTestPage() {
   const [testText, setTestText] = useState('床前明月光，疑是地上霜。举头望明月，低头思故乡。');
 
+  const handleBack = () => {
+    window.history.back();
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 p-8">
       <div className="max-w-4xl mx-auto">
+        {/* 返回按钮 */}
+        <div className="mb-6">
+          <Link href="/">
+            <Button
+              variant="outline"
+              className="flex items-center gap-2 hover:scale-105 transition-transform"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              返回首页
+            </Button>
+          </Link>
+        </div>
+
         <h1 className="text-4xl font-bold text-center mb-8">🎤 语音朗读测试</h1>
 
         <Card className="mb-6">
