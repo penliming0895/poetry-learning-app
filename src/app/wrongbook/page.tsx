@@ -49,8 +49,8 @@ export default function WrongBookPage() {
     <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-orange-50 dark:from-gray-900 dark:via-gray-800 dark:to-red-900/20 p-4 relative overflow-hidden">
       {/* 装饰背景 */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-red-400 rounded-full mix-blend-multiply opacity-8 animate-pulse"></div>
-        <div className="absolute bottom-20 right-10 w-72 h-72 bg-orange-400 rounded-full mix-blend-multiply opacity-8 animate-pulse" style={{ animationDelay: '1.5s' }}></div>
+        <div className="absolute top-20 left-10 w-72 h-72 bg-red-400 rounded-full mix-blend-multiply opacity-5 animate-pulse"></div>
+        <div className="absolute bottom-20 right-10 w-72 h-72 bg-orange-400 rounded-full mix-blend-multiply opacity-5 animate-pulse" style={{ animationDelay: '1.5s' }}></div>
       </div>
 
       <div className="container mx-auto max-w-5xl py-8 relative z-10">

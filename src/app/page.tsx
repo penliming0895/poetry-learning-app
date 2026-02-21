@@ -29,7 +29,7 @@ export default function Home() {
       className="absolute pointer-events-none text-4xl animate-bounce"
       style={{
         ...style,
-        opacity: showEmoji ? 0.6 : 0,
+        opacity: showEmoji ? 0.3 : 0,
         transition: 'opacity 0.5s ease-in',
       }}
     >
@@ -41,12 +41,7 @@ export default function Home() {
     <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-purple-900">
       {/* 装饰性背景 */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <img 
-          src="/lotus_custom.jpg" 
-          alt="荷花" 
-          className="absolute top-10 right-10 w-48 h-48 object-contain opacity-10 mix-blend-multiply" 
-        />
-        <div className="absolute bottom-20 left-1/2 -translate-x-1/2 w-72 h-72 bg-pink-400 rounded-full mix-blend-multiply opacity-8 animate-pulse" style={{ animationDelay: '2s' }}></div>
+        <div className="absolute bottom-20 left-1/2 -translate-x-1/2 w-72 h-72 bg-pink-400 rounded-full mix-blend-multiply opacity-5 animate-pulse" style={{ animationDelay: '2s' }}></div>
       </div>
 
       {/* 浮动emoji装饰 */}
