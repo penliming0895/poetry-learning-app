@@ -95,8 +95,8 @@ export default function PracticePage() {
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-purple-900 p-4 relative overflow-hidden">
         {/* 装饰背景 */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-1/4 left-10 w-64 h-64 bg-green-400 rounded-full mix-blend-multiply filter blur-2xl opacity-15 animate-pulse"></div>
-          <div className="absolute top-1/4 right-10 w-64 h-64 bg-blue-400 rounded-full mix-blend-multiply filter blur-2xl opacity-15 animate-pulse" style={{ animationDelay: '1s' }}></div>
+          <div className="absolute top-1/4 left-10 w-64 h-64 bg-green-400 rounded-full mix-blend-multiply opacity-8 animate-pulse"></div>
+          <div className="absolute top-1/4 right-10 w-64 h-64 bg-blue-400 rounded-full mix-blend-multiply opacity-8 animate-pulse" style={{ animationDelay: '1s' }}></div>
         </div>
 
         <div className="container mx-auto max-w-2xl py-8 relative z-10">
@@ -179,8 +179,8 @@ export default function PracticePage() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-purple-900 p-4 relative overflow-hidden">
       {/* 装饰背景 */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-blue-400 rounded-full mix-blend-multiply filter blur-2xl opacity-15 animate-pulse"></div>
-        <div className="absolute bottom-20 right-10 w-72 h-72 bg-purple-400 rounded-full mix-blend-multiply filter blur-2xl opacity-15 animate-pulse" style={{ animationDelay: '1.5s' }}></div>
+        <div className="absolute top-20 left-10 w-72 h-72 bg-blue-400 rounded-full mix-blend-multiply opacity-8 animate-pulse"></div>
+        <div className="absolute bottom-20 right-10 w-72 h-72 bg-purple-400 rounded-full mix-blend-multiply opacity-8 animate-pulse" style={{ animationDelay: '1.5s' }}></div>
       </div>
 
       <div className="container mx-auto max-w-3xl py-8 relative z-10">

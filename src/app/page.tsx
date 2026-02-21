@@ -41,9 +41,9 @@ export default function Home() {
     <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-purple-900">
       {/* 装饰性背景 */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-blue-400 rounded-full mix-blend-multiply filter blur-2xl opacity-15 animate-pulse"></div>
-        <div className="absolute top-20 right-10 w-72 h-72 bg-purple-400 rounded-full mix-blend-multiply filter blur-2xl opacity-15 animate-pulse" style={{ animationDelay: '1s' }}></div>
-        <div className="absolute bottom-20 left-1/2 w-72 h-72 bg-pink-400 rounded-full mix-blend-multiply filter blur-2xl opacity-15 animate-pulse" style={{ animationDelay: '2s' }}></div>
+        <div className="absolute top-20 left-10 w-72 h-72 bg-blue-400 rounded-full mix-blend-multiply opacity-8 animate-pulse"></div>
+        <div className="absolute top-20 right-10 w-72 h-72 bg-purple-400 rounded-full mix-blend-multiply opacity-8 animate-pulse" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute bottom-20 left-1/2 w-72 h-72 bg-pink-400 rounded-full mix-blend-multiply opacity-8 animate-pulse" style={{ animationDelay: '2s' }}></div>
       </div>
 
       {/* 浮动emoji装饰 */}
@@ -266,7 +266,7 @@ export default function Home() {
         {/* 成就展示 */}
         <div className="mx-auto max-w-2xl animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
           <Card className="border-2 border-gradient bg-gradient-to-r from-blue-50 via-purple-50 to-pink-50 dark:from-gray-800 dark:via-purple-900/30 dark:to-pink-900/30 shadow-xl hover:shadow-2xl transition-shadow duration-300 overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-r from-blue-100 via-purple-100 to-pink-100 dark:from-blue-900/20 dark:via-purple-900/20 dark:to-pink-900/20 opacity-50 blur-3xl"></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-100 via-purple-100 to-pink-100 dark:from-blue-900/20 dark:via-purple-900/20 dark:to-pink-900/20 opacity-30"></div>
             <CardHeader className="relative z-10">
               <div className="flex items-center justify-center gap-3">
                 <Trophy className="h-8 w-8 text-yellow-500 animate-pulse" />
