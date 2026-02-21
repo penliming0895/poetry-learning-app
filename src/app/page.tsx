@@ -2,15 +2,12 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { BookOpen, PenTool, Trophy, GraduationCap, AlertCircle, Sparkles, Star } from 'lucide-react';
 import { useGameProgress } from '@/hooks/useGameProgress';
-// import { StudyReminderButton } from '@/components/StudyReminder';
 
 export default function Home() {
-  const [hoveredCard, setHoveredCard] = useState<string | null>(null);
   const { progress, getAverageAccuracy, getUnmasteredWrong, mounted } = useGameProgress();
   const [showEmoji, setShowEmoji] = useState(false);
 
@@ -108,15 +105,9 @@ export default function Home() {
             今日任务
             <Sparkles className="h-6 w-6 text-yellow-500" />
           </h2>
-          <a href="/daily" className="group block cursor-pointer text-decoration-none hover:text-inherit">
+          <Link href="/daily" className="group block cursor-pointer text-decoration-none hover:text-inherit">
             <Card
-              className={`border-2 transition-all duration-300 overflow-hidden ${
-                hoveredCard === 'daily'
-                  ? 'scale-[1.02] border-orange-500 shadow-2xl bg-gradient-to-br from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20'
-                  : 'hover:scale-[1.01] hover:shadow-xl border-orange-200'
-              }`}
-              onMouseEnter={() => setHoveredCard('daily')}
-              onMouseLeave={() => setHoveredCard(null)}
+              className="border-2 transition-all duration-300 overflow-hidden hover:scale-[1.01] hover:shadow-xl border-orange-200"
             >
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
@@ -136,15 +127,13 @@ export default function Home() {
                       </p>
                     </div>
                   </div>
-                  <Button
-                    className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300"
-                  >
+                  <div className="bg-gradient-to-r from-orange-500 to-red-500 text-white px-6 py-2 rounded-lg font-semibold hover:from-orange-600 hover:to-red-600 transition-all">
                     开始今日任务 🚀
-                  </Button>
+                  </div>
                 </div>
               </CardContent>
             </Card>
-          </a>
+          </Link>
         </div>
 
         {/* 游戏模式选择 */}
@@ -156,16 +145,8 @@ export default function Home() {
           </h2>
           <div className="grid gap-6 md:grid-cols-3">
             {/* 练习模式 */}
-            <a href="/practice" className="group block cursor-pointer text-decoration-none hover:text-inherit">
-              <Card
-                className={`transition-all duration-300 h-full ${
-                  hoveredCard === 'practice'
-                    ? 'scale-[1.02] border-blue-500 shadow-2xl bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20'
-                    : 'hover:scale-[1.01] hover:shadow-xl border-blue-200'
-                }`}
-                onMouseEnter={() => setHoveredCard('practice')}
-                onMouseLeave={() => setHoveredCard(null)}
-              >
+            <Link href="/practice" className="group block cursor-pointer text-decoration-none hover:text-inherit">
+              <Card className="transition-all duration-300 h-full hover:scale-[1.01] hover:shadow-xl border-blue-200">
                 <CardHeader>
                   <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-400 to-indigo-500 text-white shadow-lg transform group-hover:scale-110 transition-transform duration-300">
                     <img src="/bai_juyi.png" alt="白居易" className="h-10 w-10 rounded-full object-cover" />
@@ -176,26 +157,16 @@ export default function Home() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <Button
-                    className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300"
-                  >
+                  <div className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white text-center py-2 rounded-lg font-semibold hover:from-blue-600 hover:to-indigo-700 transition-all">
                     开始练习 💪
-                  </Button>
+                  </div>
                 </CardContent>
               </Card>
-            </a>
+            </Link>
 
             {/* 测试模式 */}
-            <a href="/test" className="group block cursor-pointer text-decoration-none hover:text-inherit">
-              <Card
-                className={`transition-all duration-300 h-full ${
-                  hoveredCard === 'test'
-                    ? 'scale-[1.02] border-purple-500 shadow-2xl bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20'
-                    : 'hover:scale-[1.01] hover:shadow-xl border-purple-200'
-                }`}
-                onMouseEnter={() => setHoveredCard('test')}
-                onMouseLeave={() => setHoveredCard(null)}
-              >
+            <Link href="/test" className="group block cursor-pointer text-decoration-none hover:text-inherit">
+              <Card className="transition-all duration-300 h-full hover:scale-[1.01] hover:shadow-xl border-purple-200">
                 <CardHeader>
                   <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-400 to-pink-500 text-white shadow-lg transform group-hover:scale-110 transition-transform duration-300">
                     <img src="/du_fu.png" alt="杜甫" className="h-10 w-10 rounded-full object-cover" />
@@ -206,26 +177,16 @@ export default function Home() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <Button
-                    className="w-full bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300"
-                  >
+                  <div className="w-full bg-gradient-to-r from-purple-500 to-pink-600 text-white text-center py-2 rounded-lg font-semibold hover:from-purple-600 hover:to-pink-700 transition-all">
                     开始测试 🎯
-                  </Button>
+                  </div>
                 </CardContent>
               </Card>
-            </a>
+            </Link>
 
             {/* 错题本 */}
-            <a href="/wrongbook" className="group block cursor-pointer text-decoration-none hover:text-inherit">
-              <Card
-                className={`transition-all duration-300 h-full ${
-                  hoveredCard === 'wrongbook'
-                    ? 'scale-[1.02] border-red-500 shadow-2xl bg-gradient-to-br from-red-50 to-orange-50 dark:from-red-900/20 dark:to-orange-900/20'
-                    : 'hover:scale-[1.01] hover:shadow-xl border-red-200'
-                }`}
-                onMouseEnter={() => setHoveredCard('wrongbook')}
-                onMouseLeave={() => setHoveredCard(null)}
-              >
+            <Link href="/wrongbook" className="group block cursor-pointer text-decoration-none hover:text-inherit">
+              <Card className="transition-all duration-300 h-full hover:scale-[1.01] hover:shadow-xl border-red-200">
                 <CardHeader>
                   <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-red-400 to-orange-500 text-white shadow-lg transform group-hover:scale-110 transition-transform duration-300">
                     <img src="/li_bai.png" alt="李白" className="h-10 w-10 rounded-full object-cover" />
@@ -238,19 +199,18 @@ export default function Home() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <Button
-                    variant={totalWrongCount > 0 ? 'destructive' : 'outline'}
-                    className={`w-full shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300 ${
+                  <div
+                    className={`w-full text-center py-2 rounded-lg font-semibold transition-all ${
                       totalWrongCount > 0
-                        ? 'bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600'
-                        : ''
+                        ? 'bg-gradient-to-r from-red-500 to-orange-500 text-white hover:from-red-600 hover:to-orange-600'
+                        : 'border-2 border-gray-300 text-gray-700 hover:bg-gray-100'
                     }`}
                   >
                     {totalWrongCount > 0 ? '开始复习 🔥' : '查看错题本 📋'}
-                  </Button>
+                  </div>
                 </CardContent>
               </Card>
-            </a>
+            </Link>
           </div>
         </div>
 
