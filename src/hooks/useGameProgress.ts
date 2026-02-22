@@ -85,44 +85,53 @@ export const useGameProgress = () => {
 
   // 记录练习完成
   const recordPractice = (poetryId: string, correctCount: number, totalLines: number) => {
-    const score = Math.round((correctCount / totalLines) * 100);
-    setProgress(prev => {
-      const newLearnedPoems = prev.learnedPoems.includes(poetryId)
-        ? prev.learnedPoems
-        : [...prev.learnedPoems, poetryId];
+    try {
+      const score = Math.round((correctCount / totalLines) * 100);
+      setProgress(prev => {
+        const newLearnedPoems = prev.learnedPoems.includes(poetryId)
+          ? prev.learnedPoems
+          : [...prev.learnedPoems, poetryId];
 
-      return {
-        ...prev,
-        learnedPoems: newLearnedPoems,
-        testCount: prev.testCount + 1,
-        totalScore: prev.totalScore + score,
-        bestScores: {
-          ...prev.bestScores,
-          [poetryId]: Math.max(prev.bestScores[poetryId] || 0, score),
-        },
-      };
-    });
-    return score;
+        return {
+          ...prev,
+          learnedPoems: newLearnedPoems,
+          testCount: prev.testCount + 1,
+          totalScore: prev.totalScore + score,
+          bestScores: {
+            ...prev.bestScores,
+            [poetryId]: Math.max(prev.bestScores[poetryId] || 0, score),
+          },
+        };
+      });
+      return score;
+    } catch (error) {
+      console.error('recordPractice error:', error);
+      return 0;
+    }
   };
 
   // 记录测试完成
   const recordTest = (poetryId: string, score: number) => {
-    setProgress(prev => {
-      const newLearnedPoems = score >= 60 && !prev.learnedPoems.includes(poetryId)
-        ? [...prev.learnedPoems, poetryId]
-        : prev.learnedPoems;
+    try {
+      setProgress(prev => {
+        const newLearnedPoems = score >= 60 && !prev.learnedPoems.includes(poetryId)
+          ? [...prev.learnedPoems, poetryId]
+          : prev.learnedPoems;
 
-      return {
-        ...prev,
-        learnedPoems: newLearnedPoems,
-        testCount: prev.testCount + 1,
-        totalScore: prev.totalScore + score,
-        bestScores: {
-          ...prev.bestScores,
-          [poetryId]: Math.max(prev.bestScores[poetryId] || 0, score),
-        },
-      };
-    });
+        return {
+          ...prev,
+          learnedPoems: newLearnedPoems,
+          testCount: prev.testCount + 1,
+          totalScore: prev.totalScore + score,
+          bestScores: {
+            ...prev.bestScores,
+            [poetryId]: Math.max(prev.bestScores[poetryId] || 0, score),
+          },
+        };
+      });
+    } catch (error) {
+      console.error('recordTest error:', error);
+    }
   };
 
   // 计算平均正确率
@@ -133,13 +142,24 @@ export const useGameProgress = () => {
 
   // 重置进度
   const resetProgress = () => {
-    setProgress(defaultProgress);
-    localStorage.removeItem(STORAGE_KEY);
+    try {
+      setProgress(defaultProgress);
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem(STORAGE_KEY);
+      }
+    } catch (error) {
+      console.error('resetProgress error:', error);
+    }
   };
 
   // 获取诗词的最佳得分
   const getBestScore = (poetryId: string): number => {
-    return progress.bestScores[poetryId] || 0;
+    try {
+      return progress.bestScores[poetryId] || 0;
+    } catch (error) {
+      console.error('getBestScore error:', error);
+      return 0;
+    }
   };
 
   // 记录整首诗词错题
@@ -150,28 +170,32 @@ export const useGameProgress = () => {
     dynasty: string,
     category: string
   ) => {
-    setProgress(prev => {
-      const existingIndex = prev.wrongPoetryList.findIndex(wp => wp.poetryId === poetryId);
-      const wrongPoetry: WrongPoetry = {
-        poetryId,
-        poetryTitle,
-        author,
-        dynasty,
-        category,
-        wrongCount: existingIndex !== -1 ? prev.wrongPoetryList[existingIndex].wrongCount + 1 : 1,
-        lastWrongDate: Date.now(),
-        mastered: false,
-      };
+    try {
+      setProgress(prev => {
+        const existingIndex = prev.wrongPoetryList.findIndex(wp => wp.poetryId === poetryId);
+        const wrongPoetry: WrongPoetry = {
+          poetryId,
+          poetryTitle,
+          author,
+          dynasty,
+          category,
+          wrongCount: existingIndex !== -1 ? prev.wrongPoetryList[existingIndex].wrongCount + 1 : 1,
+          lastWrongDate: Date.now(),
+          mastered: false,
+        };
 
-      const newWrongList = existingIndex !== -1
-        ? prev.wrongPoetryList.map((wp, idx) => idx === existingIndex ? wrongPoetry : wp)
-        : [...prev.wrongPoetryList, wrongPoetry];
+        const newWrongList = existingIndex !== -1
+          ? prev.wrongPoetryList.map((wp, idx) => idx === existingIndex ? wrongPoetry : wp)
+          : [...prev.wrongPoetryList, wrongPoetry];
 
-      return {
-        ...prev,
-        wrongPoetryList: newWrongList,
-      };
-    });
+        return {
+          ...prev,
+          wrongPoetryList: newWrongList,
+        };
+      });
+    } catch (error) {
+      console.error('recordWrongPoetry error:', error);
+    }
   };
 
   // 记录单句错题
@@ -182,84 +206,100 @@ export const useGameProgress = () => {
     lineContent: string,
     author: string
   ) => {
-    setProgress(prev => {
-      // 查找是否已经存在该诗词该句的错题
-      const existingIndex = prev.wrongLineList.findIndex(
-        wl => wl.poetryId === poetryId && wl.lineIndex === lineIndex
-      );
+    try {
+      setProgress(prev => {
+        // 查找是否已经存在该诗词该句的错题
+        const existingIndex = prev.wrongLineList.findIndex(
+          wl => wl.poetryId === poetryId && wl.lineIndex === lineIndex
+        );
 
-      const wrongLine: WrongLine = {
-        poetryId,
-        poetryTitle,
-        lineIndex,
-        lineContent,
-        author,
-        wrongCount: existingIndex !== -1 ? prev.wrongLineList[existingIndex].wrongCount + 1 : 1,
-        lastWrongDate: Date.now(),
-        mastered: false,
-      };
+        const wrongLine: WrongLine = {
+          poetryId,
+          poetryTitle,
+          lineIndex,
+          lineContent,
+          author,
+          wrongCount: existingIndex !== -1 ? prev.wrongLineList[existingIndex].wrongCount + 1 : 1,
+          lastWrongDate: Date.now(),
+          mastered: false,
+        };
 
-      const newWrongList = existingIndex !== -1
-        ? prev.wrongLineList.map((wl, idx) => idx === existingIndex ? wrongLine : wl)
-        : [...prev.wrongLineList, wrongLine];
+        const newWrongList = existingIndex !== -1
+          ? prev.wrongLineList.map((wl, idx) => idx === existingIndex ? wrongLine : wl)
+          : [...prev.wrongLineList, wrongLine];
 
-      return {
-        ...prev,
-        wrongLineList: newWrongList,
-      };
-    });
+        return {
+          ...prev,
+          wrongLineList: newWrongList,
+        };
+      });
+    } catch (error) {
+      console.error('recordWrongLine error:', error);
+    }
   };
 
   // 标记错题为已掌握
   const markAsMastered = (type: 'poetry' | 'line', poetryId: string, lineIndex?: number) => {
-    setProgress(prev => {
-      if (type === 'poetry') {
-        return {
-          ...prev,
-          wrongPoetryList: prev.wrongPoetryList.map(wp =>
-            wp.poetryId === poetryId ? { ...wp, mastered: true } : wp
-          ),
-        };
-      } else {
-        return {
-          ...prev,
-          wrongLineList: prev.wrongLineList.map(wl =>
-            wl.poetryId === poetryId && wl.lineIndex === lineIndex
-              ? { ...wl, mastered: true }
-              : wl
-          ),
-        };
-      }
-    });
+    try {
+      setProgress(prev => {
+        if (type === 'poetry') {
+          return {
+            ...prev,
+            wrongPoetryList: prev.wrongPoetryList.map(wp =>
+              wp.poetryId === poetryId ? { ...wp, mastered: true } : wp
+            ),
+          };
+        } else {
+          return {
+            ...prev,
+            wrongLineList: prev.wrongLineList.map(wl =>
+              wl.poetryId === poetryId && wl.lineIndex === lineIndex
+                ? { ...wl, mastered: true }
+                : wl
+            ),
+          };
+        }
+      });
+    } catch (error) {
+      console.error('markAsMastered error:', error);
+    }
   };
 
   // 清除已掌握的错题
   const clearMastered = (type: 'poetry' | 'line') => {
-    setProgress(prev => {
-      if (type === 'poetry') {
-        return {
-          ...prev,
-          wrongPoetryList: prev.wrongPoetryList.filter(wp => !wp.mastered),
-        };
-      } else {
-        return {
-          ...prev,
-          wrongLineList: prev.wrongLineList.filter(wl => !wl.mastered),
-        };
-      }
-    });
+    try {
+      setProgress(prev => {
+        if (type === 'poetry') {
+          return {
+            ...prev,
+            wrongPoetryList: prev.wrongPoetryList.filter(wp => !wp.mastered),
+          };
+        } else {
+          return {
+            ...prev,
+            wrongLineList: prev.wrongLineList.filter(wl => !wl.mastered),
+          };
+        }
+      });
+    } catch (error) {
+      console.error('clearMastered error:', error);
+    }
   };
 
   // 获取未掌握的错题
   const getUnmasteredWrong = (type: 'poetry' | 'line'): WrongPoetry[] | WrongLine[] => {
-    // 确保数组存在
-    const wrongPoetryList = progress.wrongPoetryList || [];
-    const wrongLineList = progress.wrongLineList || [];
+    try {
+      const wrongPoetryList = progress.wrongPoetryList || [];
+      const wrongLineList = progress.wrongLineList || [];
 
-    if (type === 'poetry') {
-      return wrongPoetryList.filter(wp => !wp.mastered);
-    } else {
-      return wrongLineList.filter(wl => !wl.mastered);
+      if (type === 'poetry') {
+        return wrongPoetryList.filter(wp => !wp.mastered);
+      } else {
+        return wrongLineList.filter(wl => !wl.mastered);
+      }
+    } catch (error) {
+      console.error('getUnmasteredWrong error:', error);
+      return [];
     }
   };
 
