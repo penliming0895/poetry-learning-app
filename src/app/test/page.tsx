@@ -368,8 +368,9 @@ export default function TestPage() {
                   <Star className="h-5 w-5 text-yellow-500" />
                   {selectedPoetry.author} · {selectedPoetry.dynasty}
                 </p>
-                <div className="mt-3">
-                  <VoicePlayer text={selectedPoetry.content} />
+                {/* 临时禁用 VoicePlayer 以诊断问题 */}
+                <div className="mt-3 text-gray-500 text-sm">
+                  🎤 语音朗读已临时禁用（诊断模式）
                 </div>
               </div>
               <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-400 to-pink-500 text-white shadow-lg transform hover:scale-110 transition-transform duration-300">
