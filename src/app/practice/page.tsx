@@ -1,8 +1,7 @@
 'use client';
 
-import { useState, useEffect, Suspense } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -14,10 +13,7 @@ import { Poetry } from '@/types/poetry';
 import { useGameProgress } from '@/hooks/useGameProgress';
 import { useAchievements } from '@/hooks/useAchievements';
 
-function PracticeContent() {
-  const searchParams = useSearchParams();
-  const poemId = searchParams.get('poemId');
-
+export default function PracticePage() {
   const [currentPoetryIndex, setCurrentPoetryIndex] = useState(0);
   const [currentLineIndex, setCurrentLineIndex] = useState(0);
   const [showAnswer, setShowAnswer] = useState(false);
@@ -30,13 +26,17 @@ function PracticeContent() {
 
   // 如果有poemId，跳转到对应的诗词
   useEffect(() => {
-    if (poemId) {
-      const index = poetryDatabase.findIndex(p => p.id === poemId);
-      if (index !== -1) {
-        setCurrentPoetryIndex(index);
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search);
+      const poemId = urlParams.get('poemId');
+      if (poemId) {
+        const index = poetryDatabase.findIndex(p => p.id === poemId);
+        if (index !== -1) {
+          setCurrentPoetryIndex(index);
+        }
       }
     }
-  }, [poemId]);
+  }, []);
 
   const currentPoetry: Poetry = poetryDatabase[currentPoetryIndex];
   const totalLines = currentPoetry.lines.length;
@@ -363,20 +363,5 @@ function PracticeContent() {
         }
       `}</style>
     </div>
-  );
-}
-
-export default function PracticePage() {
-  return (
-    <Suspense fallback={
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-purple-900 p-4 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600 dark:text-gray-400">加载中...</p>
-        </div>
-      </div>
-    }>
-      <PracticeContent />
-    </Suspense>
   );
 }

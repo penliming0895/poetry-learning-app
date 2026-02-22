@@ -1,8 +1,7 @@
 'use client';
 
-import { useState, useEffect, Suspense } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -14,9 +13,8 @@ import { Poetry } from '@/types/poetry';
 import { useGameProgress } from '@/hooks/useGameProgress';
 import { useAchievements } from '@/hooks/useAchievements';
 
-function TestContent() {
-  const searchParams = useSearchParams();
-  const poemId = searchParams.get('poemId');
+export default function TestPage() {
+  const [poemId, setPoemId] = useState<string | null>(null);
 
   const [selectedPoetry, setSelectedPoetry] = useState<Poetry | null>(null);
   const [userInput, setUserInput] = useState('');
@@ -28,13 +26,19 @@ function TestContent() {
 
   // 如果有poemId，自动选择对应的诗词
   useEffect(() => {
-    if (poemId) {
-      const poem = poetryDatabase.find(p => p.id === poemId);
-      if (poem) {
-        setSelectedPoetry(poem);
+    // 使用传统的 URL 解析方式，兼容移动端
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search);
+      const id = urlParams.get('poemId');
+      if (id) {
+        setPoemId(id);
+        const poem = poetryDatabase.find(p => p.id === id);
+        if (poem) {
+          setSelectedPoetry(poem);
+        }
       }
     }
-  }, [poemId]);
+  }, []);
 
   const handleSelectPoetry = (poetry: Poetry) => {
     setSelectedPoetry(poetry);
@@ -425,20 +429,5 @@ function TestContent() {
         )}
       </div>
     </div>
-  );
-}
-
-export default function TestPage() {
-  return (
-    <Suspense fallback={
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-50 dark:from-gray-900 dark:via-gray-800 dark:to-purple-900 p-4 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-purple-600 mx-auto mb-4"></div>
-          <p className="text-gray-600 dark:text-gray-400">加载中...</p>
-        </div>
-      </div>
-    }>
-      <TestContent />
-    </Suspense>
   );
 }
