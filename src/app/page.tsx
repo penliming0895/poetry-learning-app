@@ -227,12 +227,18 @@ function HomeContent() {
             </div>
             <div className="flex items-center gap-2">
               <span className="text-2xl">5️⃣</span>
+              <a href="/test-voice-simple" style={{ color: 'pink', fontWeight: 'bold', fontSize: '18px', padding: '8px', border: '2px solid pink', borderRadius: '5px' }}>
+                🎤 简化版语音测试（NEW）
+              </a>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-2xl">6️⃣</span>
               <a href="/daily" className="text-orange-600 font-bold hover:underline text-lg">
                 实际功能：每日背默
               </a>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-2xl">6️⃣</span>
+              <span className="text-2xl">7️⃣</span>
               <a href="/practice" className="text-blue-600 font-bold hover:underline text-lg">
                 实际功能：背诵练习
               </a>
