@@ -136,6 +136,33 @@ body {
   @apply font-sans;
 }
 
+/* 浏览器兼容性修复 */
+/* Firefox bg-clip-text 兼容性 */
+.bg-clip-text {
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-transparent {
+  -webkit-text-fill-color: transparent;
+}
+
+/* 渐变兼容性 */
+.bg-gradient-to-r,
+.bg-gradient-to-br,
+.bg-gradient-to-l,
+.bg-gradient-to-bl {
+  background-image: -webkit-linear-gradient(to right, var(--tw-gradient-from), var(--tw-gradient-to));
+  background-image: linear-gradient(to right, var(--tw-gradient-from), var(--tw-gradient-to));
+}
+
+/* 确保渐变在所有浏览器中正常工作 */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 /* PWA 动画 */
 @keyframes slide-up {
   from {
@@ -150,4 +177,19 @@ body {
 
 .animate-slide-up {
   animation: slide-up 0.3s ease-out;
+}
+
+/* 渐变文字动画兼容性 */
+@keyframes gradient {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.animate-gradient {
+  background-size: 200% auto;
+  animation: gradient 5s ease infinite;
 }
