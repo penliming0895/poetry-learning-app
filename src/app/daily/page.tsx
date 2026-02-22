@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { ArrowLeft, Calendar, BookOpen, CheckCircle2, Circle, Play, Sparkles, Star, Trophy, Flame } from 'lucide-react';
 import { getDailyPoetry } from '@/data/poetryData';
-import VoicePlayer from '@/components/VoicePlayer';
+import SimpleVoicePlayer from '@/components/SimpleVoicePlayer';
 import { Poetry } from '@/types/poetry';
 import { useGameProgress } from '@/hooks/useGameProgress';
 import { useAchievements } from '@/hooks/useAchievements';
@@ -206,7 +206,7 @@ export default function DailyPage() {
                       <p className="text-base text-gray-700 dark:text-gray-300 leading-relaxed mb-3">
                         {poem.content.substring(0, 50)}...
                       </p>
-                      <VoicePlayer text={poem.content} />
+                      <SimpleVoicePlayer text={poem.content} />
                     </div>
 
                     <div className="flex gap-3">

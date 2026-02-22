@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { ArrowLeft, BookOpen, Eye, EyeOff, CheckCircle, XCircle, Lightbulb, Sparkles, Star, Zap } from 'lucide-react';
-import VoicePlayer from '@/components/VoicePlayer';
+import SimpleVoicePlayer from '@/components/SimpleVoicePlayer';
 import { poetryDatabase, getPoetryById } from '@/data/poetryData';
 import { Poetry } from '@/types/poetry';
 import { useGameProgress } from '@/hooks/useGameProgress';
@@ -277,7 +277,7 @@ export default function PracticePage() {
                         {currentPoetry.lines[currentLineIndex]}
                       </div>
                       <div className="flex justify-center">
-                        <VoicePlayer text={currentPoetry.lines[currentLineIndex]} />
+                        <SimpleVoicePlayer text={currentPoetry.lines[currentLineIndex]} />
                       </div>
                     </div>
                   ) : (

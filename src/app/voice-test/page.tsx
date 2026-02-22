@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import VoicePlayer from '@/components/VoicePlayer';
+import SimpleVoicePlayer from '@/components/SimpleVoicePlayer';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
@@ -52,7 +52,7 @@ export default function VoiceTestPage() {
           </CardHeader>
           <CardContent>
             <div className="flex items-center gap-4">
-              <VoicePlayer text={testText} />
+              <SimpleVoicePlayer text={testText} />
               <p className="text-gray-600 text-sm">
                 点击"朗读"按钮测试语音功能。请在浏览器控制台查看详细日志。
               </p>

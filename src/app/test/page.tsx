@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 import { ArrowLeft, PenTool, CheckCircle, XCircle, RotateCcw, Sparkles, Star, Zap, BookOpen } from 'lucide-react';
-import VoicePlayer from '@/components/VoicePlayer';
+import SimpleVoicePlayer from '@/components/SimpleVoicePlayer';
 import { poetryDatabase } from '@/data/poetryData';
 import { Poetry } from '@/types/poetry';
 import { useGameProgress } from '@/hooks/useGameProgress';
@@ -369,7 +369,7 @@ export default function TestPage() {
                   {selectedPoetry.author} · {selectedPoetry.dynasty}
                 </p>
                 <div className="mt-3">
-                  <VoicePlayer text={selectedPoetry.content} />
+                  <SimpleVoicePlayer text={selectedPoetry.content} />
                 </div>
               </div>
               <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-400 to-pink-500 text-white shadow-lg transform hover:scale-110 transition-transform duration-300">
