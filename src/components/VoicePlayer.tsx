@@ -12,27 +12,39 @@ interface VoicePlayerProps {
   className?: string;
 }
 
-// 音色选项
+// 音色选项（根据 coze-coding-dev-sdk 文档的正确列表）
 const SPEAKER_OPTIONS = [
-  { value: 'zh_female_xueayi_saturn_bigtts', label: '女声 - 学雅', category: 'female' },
-  { value: 'zh_female_zhiuxu_mercury_bigtts', label: '女声 - 知旭', category: 'female' },
-  { value: 'zh_female_jingjing_saturn_bigtts', label: '女声 - 晶晶', category: 'female' },
-  { value: 'zh_male_m191_uranus_bigtts', label: '男声 - M191', category: 'male' },
-  { value: 'zh_male_zhicheng_uranus_bigtts', label: '男声 - 志诚', category: 'male' },
-  { value: 'zh_male_yunfei_mars_bigtts', label: '男声 - 云飞', category: 'male' },
-  { value: 'zh_child_nannan_saturn_bigtts', label: '童声 - 囡囡', category: 'child' },
-  { value: 'zh_child_xiaoxiao_mercury_bigtts', label: '童声 - 小小', category: 'child' },
+  // General Purpose
+  { value: 'zh_female_xiaohe_uranus_bigtts', label: '女声 - 小荷（通用）', category: 'female' },
+  { value: 'zh_female_vv_uranus_bigtts', label: '女声 - Vivi（中英双语）', category: 'female' },
+  { value: 'zh_male_m191_uranus_bigtts', label: '男声 - 云州', category: 'male' },
+  { value: 'zh_male_taocheng_uranus_bigtts', label: '男声 - 淘成', category: 'male' },
+  // Audiobook/Reading
+  { value: 'zh_female_xueayi_saturn_bigtts', label: '女声 - 学雅（故事）', category: 'female' },
+  // Video Dubbing
+  { value: 'zh_male_dayi_saturn_bigtts', label: '男声 - 达艺', category: 'male' },
+  { value: 'zh_female_mizai_saturn_bigtts', label: '女声 - 咪仔', category: 'female' },
+  { value: 'zh_female_jitangnv_saturn_bigtts', label: '女声 - 激情', category: 'female' },
+  { value: 'zh_female_meilinvyou_saturn_bigtts', label: '女声 - 女友', category: 'female' },
+  { value: 'zh_female_santongyongns_saturn_bigtts', label: '女声 - 甜心', category: 'female' },
+  { value: 'zh_male_ruyayichen_saturn_bigtts', label: '男声 - 雅辰', category: 'male' },
+  // Role Playing
+  { value: 'saturn_zh_female_keainvsheng_tob', label: '女声 - 可爱女生', category: 'female' },
+  { value: 'saturn_zh_female_tiaopigongzhu_tob', label: '女声 - 调皮公主', category: 'female' },
+  { value: 'saturn_zh_male_shuanglangshaonian_tob', label: '男声 - 爽朗少年', category: 'male' },
+  { value: 'saturn_zh_male_tiancaitongzhuo_tob', label: '男声 - 天才同桌', category: 'male' },
 ];
 
-// 语速选项
+// 语速选项（根据 coze-coding-dev-sdk 文档，范围是 -50 到 100）
 const SPEECH_RATE_LABELS: Record<string, string> = {
-  '-5': '0.5x (很慢)',
-  '-3': '0.7x (较慢)',
-  '-1': '0.9x (稍慢)',
+  '-30': '0.5x (很慢)',
+  '-20': '0.7x (较慢)',
+  '-10': '0.85x (稍慢)',
   '0': '1.0x (正常)',
-  '1': '1.1x (稍快)',
-  '3': '1.3x (较快)',
-  '5': '1.5x (很快)',
+  '10': '1.2x (稍快)',
+  '20': '1.4x (较快)',
+  '30': '1.6x (很快)',
+  '50': '2.0x (超快)',
 };
 
 // 全局音频缓存
@@ -383,15 +395,15 @@ function VoicePlayer({ text, className = '' }: VoicePlayerProps) {
               <Slider
                 value={[currentSpeechRate]}
                 onValueChange={(values) => setCurrentSpeechRate(values[0])}
-                min={-5}
-                max={5}
-                step={2}
+                min={-30}
+                max={50}
+                step={10}
                 className="w-full"
               />
               <div className="flex justify-between text-xs text-gray-500 mt-1">
-                <span>慢</span>
+                <span>很慢</span>
                 <span>正常</span>
-                <span>快</span>
+                <span>很快</span>
               </div>
             </div>
           </CardContent>

@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
       speaker: speaker || 'zh_female_xueayi_saturn_bigtts',
       audioFormat: 'mp3',
       sampleRate: 24000,
-      speechRate: speechRate || 0, // -10 到 10，0 是正常速度
+      speechRate: speechRate || 0, // -50 到 100，0 是正常速度
       loudnessRate: 0
     });
 

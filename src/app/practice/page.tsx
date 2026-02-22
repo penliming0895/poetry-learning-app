@@ -92,7 +92,9 @@ export default function PracticePage() {
   };
 
   const getHint = (fullLine: string): string => {
-    return fullLine.substring(0, 2) + '...';
+    // 根据诗句长度智能显示提示：显示前4-6个字符，或者一半的字符
+    const hintLength = Math.max(4, Math.ceil(fullLine.length / 2));
+    return fullLine.substring(0, hintLength) + '...';
   };
 
   if (completed) {
