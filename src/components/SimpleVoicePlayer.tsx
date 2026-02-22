@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Volume2, VolumeX } from 'lucide-react';
 
@@ -16,16 +16,25 @@ interface VoicePlayerProps {
 function SimpleVoicePlayer({ text, className = '' }: VoicePlayerProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [supported, setSupported] = useState(true);
+  const [supported, setSupported] = useState<boolean | null>(null); // null = 检测中
 
   // 检测浏览器支持
-  useState(() => {
+  useEffect(() => {
     if (typeof window !== 'undefined') {
-      const hasSupport = 'speechSynthesis' in window && 'SpeechSynthesisUtterance' in window;
+      const hasSpeechSynthesis = 'speechSynthesis' in window;
+      const hasUtterance = 'SpeechSynthesisUtterance' in window;
+      const hasSupport = hasSpeechSynthesis && hasUtterance;
+
+      console.log('🎤 语音支持检测:', {
+        hasSpeechSynthesis,
+        hasUtterance,
+        hasSupport,
+        userAgent: navigator.userAgent
+      });
+
       setSupported(hasSupport);
-      console.log('🎤 语音支持检测:', hasSupport);
     }
-  });
+  }, []);
 
   // 停止播放
   const stopSpeaking = useCallback(() => {
@@ -103,9 +112,39 @@ function SimpleVoicePlayer({ text, className = '' }: VoicePlayerProps) {
     }
   }, [isPlaying, supported, stopSpeaking, startSpeaking]);
 
+  // 检测中
+  if (supported === null) {
+    return (
+      <div className={className}>
+        <Button
+          disabled
+          size="sm"
+          variant="outline"
+        >
+          检测中...
+        </Button>
+      </div>
+    );
+  }
+
   // 不支持时显示
   if (!supported) {
-    return null; // 或者显示一个简单的提示
+    return (
+      <div className={className}>
+        <Button
+          disabled
+          size="sm"
+          variant="outline"
+          className="opacity-60"
+        >
+          <VolumeX className="h-4 w-4 mr-2" />
+          不支持
+        </Button>
+        <div className="mt-2 text-xs text-gray-500">
+          您的浏览器不支持语音功能
+        </div>
+      </div>
+    );
   }
 
   return (
