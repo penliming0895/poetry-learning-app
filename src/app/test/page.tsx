@@ -9,7 +9,6 @@ import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 import { ArrowLeft, PenTool, CheckCircle, XCircle, RotateCcw, Sparkles, Star, Zap, BookOpen } from 'lucide-react';
 import VoicePlayer from '@/components/VoicePlayer';
-import BackgroundMusic from '@/components/BackgroundMusic';
 import { poetryDatabase } from '@/data/poetryData';
 import { Poetry } from '@/types/poetry';
 import { useGameProgress } from '@/hooks/useGameProgress';
@@ -422,9 +421,6 @@ export default function TestPage() {
           </Card>
         )}
       </div>
-
-      {/* 背景音乐 */}
-      <BackgroundMusic />
     </div>
   );
 }
