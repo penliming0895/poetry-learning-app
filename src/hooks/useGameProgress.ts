@@ -21,12 +21,21 @@ const defaultProgress: GameProgress = {
   wrongLineList: [],
 };
 
+// 临时禁用 localStorage 以诊断问题
+const DISABLE_LOCAL_STORAGE = true;
+
 export const useGameProgress = () => {
   const [progress, setProgress] = useState<GameProgress>(defaultProgress);
   const [mounted, setMounted] = useState(false);
 
   // 从 localStorage 加载进度
   useEffect(() => {
+    if (DISABLE_LOCAL_STORAGE) {
+      console.log('⚠️ localStorage 已禁用（诊断模式）');
+      setMounted(true);
+      return;
+    }
+
     // 确保只在客户端执行
     if (typeof window === 'undefined') {
       setMounted(true);
@@ -74,6 +83,10 @@ export const useGameProgress = () => {
 
   // 保存进度到 localStorage
   useEffect(() => {
+    if (DISABLE_LOCAL_STORAGE) {
+      return;
+    }
+
     if (mounted && typeof window !== 'undefined') {
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
@@ -136,15 +149,20 @@ export const useGameProgress = () => {
 
   // 计算平均正确率
   const getAverageAccuracy = (): number => {
-    if (progress.testCount === 0) return 0;
-    return Math.round(progress.totalScore / progress.testCount);
+    try {
+      if (progress.testCount === 0) return 0;
+      return Math.round(progress.totalScore / progress.testCount);
+    } catch (error) {
+      console.error('getAverageAccuracy error:', error);
+      return 0;
+    }
   };
 
   // 重置进度
   const resetProgress = () => {
     try {
       setProgress(defaultProgress);
-      if (typeof window !== 'undefined') {
+      if (typeof window !== 'undefined' && !DISABLE_LOCAL_STORAGE) {
         localStorage.removeItem(STORAGE_KEY);
       }
     } catch (error) {
@@ -171,6 +189,11 @@ export const useGameProgress = () => {
     category: string
   ) => {
     try {
+      if (DISABLE_LOCAL_STORAGE) {
+        console.log('⚠️ 错题记录已禁用（诊断模式）');
+        return;
+      }
+
       setProgress(prev => {
         const existingIndex = prev.wrongPoetryList.findIndex(wp => wp.poetryId === poetryId);
         const wrongPoetry: WrongPoetry = {
@@ -207,6 +230,11 @@ export const useGameProgress = () => {
     author: string
   ) => {
     try {
+      if (DISABLE_LOCAL_STORAGE) {
+        console.log('⚠️ 错题记录已禁用（诊断模式）');
+        return;
+      }
+
       setProgress(prev => {
         // 查找是否已经存在该诗词该句的错题
         const existingIndex = prev.wrongLineList.findIndex(

@@ -1,21 +1,12 @@
 'use client';
 
-import { useState, useEffect, Suspense } from 'react';
-import dynamic from 'next/dynamic';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Sparkles, Star, Award } from 'lucide-react';
 import { useGameProgress } from '@/hooks/useGameProgress';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
-// PWAInstallPrompt 已临时禁用
-// import PWAInstallPrompt from '@/components/PWAInstallPrompt';
-
-// 动态导入成就相关组件，提升首屏加载速度
-const AchievementCard = dynamic(() => import('@/components/AchievementCard').then(mod => ({ default: mod.default })), {
-  loading: () => <div className="animate-pulse bg-gray-200 dark:bg-gray-700 rounded-lg h-32" />,
-  ssr: false,
-});
 
 function HomeContent() {
   try {
@@ -33,6 +24,29 @@ function HomeContent() {
       setClickLog(prev => [`[${timestamp}] ${message}`, ...prev]);
       console.log(message);
     };
+
+    // 全局错误监听
+    useEffect(() => {
+      const handleError = (event: ErrorEvent) => {
+        const errorMsg = `Global Error: ${event.message}`;
+        addLog(errorMsg);
+        console.error('全局错误:', event);
+      };
+
+      const handleUnhandledRejection = (event: PromiseRejectionEvent) => {
+        const errorMsg = `Unhandled Promise Rejection: ${event.reason}`;
+        addLog(errorMsg);
+        console.error('未处理的 Promise 拒绝:', event);
+      };
+
+      window.addEventListener('error', handleError);
+      window.addEventListener('unhandledrejection', handleUnhandledRejection);
+
+      return () => {
+        window.removeEventListener('error', handleError);
+        window.removeEventListener('unhandledrejection', handleUnhandledRejection);
+      };
+    }, []);
 
     const handleCardClick = (type: string, e: React.MouseEvent) => {
       addLog(`卡片点击: ${type}, 阻止状态: ${e.defaultPrevented}`);
