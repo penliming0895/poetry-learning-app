@@ -34,6 +34,7 @@ function VoicePlayer({ text, className = '' }: VoicePlayerProps) {
   const [currentVoice, setCurrentVoice] = useState<string>('');
   const [currentRate, setCurrentRate] = useState(1.0);
   const [currentPitch, setCurrentPitch] = useState(1.0);
+  const [voicesLoaded, setVoicesLoaded] = useState(false);
 
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
 
@@ -49,37 +50,69 @@ function VoicePlayer({ text, className = '' }: VoicePlayerProps) {
     }
   }, []);
 
+  // 获取所有语音列表
+  const getAllVoices = useCallback(() => {
+    if (typeof window === 'undefined') return [];
+    return window.speechSynthesis.getVoices();
+  }, []);
+
   // 获取中文语音列表
   const getChineseVoices = useCallback(() => {
-    if (typeof window === 'undefined') return [];
-    const voices = window.speechSynthesis.getVoices();
+    const voices = getAllVoices();
     return voices.filter(voice => voice.lang.startsWith('zh'));
-  }, []);
+  }, [getAllVoices]);
 
   // 监听语音列表变化
   useEffect(() => {
     if (typeof window !== 'undefined') {
+      let timeoutId: NodeJS.Timeout;
+
       const loadVoices = () => {
-        const voices = getChineseVoices();
-        if (voices.length > 0 && !currentVoice) {
-          // 默认选择第一个中文语音
-          setCurrentVoice(voices[0].name);
+        const voices = getAllVoices();
+        const chineseVoices = getChineseVoices();
+        
+        console.log('🎤 语音列表加载:', {
+          total: voices.length,
+          chinese: chineseVoices.length,
+          voices: chineseVoices.map(v => v.name)
+        });
+
+        if (voices.length > 0) {
+          setVoicesLoaded(true);
+          
+          if (!currentVoice && chineseVoices.length > 0) {
+            // 默认选择第一个中文语音
+            setCurrentVoice(chineseVoices[0].name);
+            console.log('✅ 默认选择语音:', chineseVoices[0].name);
+          } else if (!currentVoice && voices.length > 0) {
+            // 如果没有中文语音，使用第一个可用语音
+            setCurrentVoice(voices[0].name);
+            console.log('✅ 默认选择语音（非中文）:', voices[0].name);
+          }
         }
       };
 
       // 有些浏览器需要等待 voiceschanged 事件
-      window.speechSynthesis.onvoiceschanged = loadVoices;
+      if (window.speechSynthesis.onvoiceschanged !== undefined) {
+        window.speechSynthesis.onvoiceschanged = loadVoices;
+      }
       
       // 立即尝试加载
       loadVoices();
 
+      // 延迟再次尝试，确保语音列表完全加载
+      timeoutId = setTimeout(() => {
+        loadVoices();
+      }, 500);
+
       return () => {
+        if (timeoutId) clearTimeout(timeoutId);
         if (window.speechSynthesis.onvoiceschanged) {
           window.speechSynthesis.onvoiceschanged = null;
         }
       };
     }
-  }, [getChineseVoices, currentVoice]);
+  }, [getAllVoices, getChineseVoices, currentVoice]);
 
   // 停止当前播放
   const stopSpeaking = useCallback(() => {
@@ -100,6 +133,16 @@ function VoicePlayer({ text, className = '' }: VoicePlayerProps) {
       return;
     }
 
+    if (!voicesLoaded) {
+      setErrorMessage('语音列表正在加载，请稍候...');
+      return;
+    }
+
+    if (!text || text.trim() === '') {
+      setErrorMessage('没有可朗读的内容');
+      return;
+    }
+
     if (isPaused) {
       // 从暂停恢复
       resumeSpeaking();
@@ -110,14 +153,11 @@ function VoicePlayer({ text, className = '' }: VoicePlayerProps) {
       // 开始播放
       startSpeaking();
     }
-  }, [isPlaying, isPaused, supported]);
+  }, [isPlaying, isPaused, supported, voicesLoaded, text]);
 
   // 开始播放
   const startSpeaking = useCallback(() => {
-    if (!text || text.trim() === '') {
-      setErrorMessage('没有可朗读的内容');
-      return;
-    }
+    console.log('🎤 开始播放:', { text: text.substring(0, 30) + '...', voice: currentVoice, rate: currentRate });
 
     stopSpeaking();
     setIsLoading(true);
@@ -131,10 +171,13 @@ function VoicePlayer({ text, className = '' }: VoicePlayerProps) {
       utterance.lang = 'zh-CN';
 
       // 设置语音
-      const voices = getChineseVoices();
+      const voices = getAllVoices();
       const selectedVoice = voices.find(v => v.name === currentVoice);
       if (selectedVoice) {
         utterance.voice = selectedVoice;
+        console.log('✅ 使用语音:', selectedVoice.name);
+      } else {
+        console.warn('⚠️ 未找到指定语音，使用默认语音');
       }
 
       // 设置语速（0.1-10）
@@ -145,12 +188,14 @@ function VoicePlayer({ text, className = '' }: VoicePlayerProps) {
 
       // 事件监听
       utterance.onstart = () => {
+        console.log('▶️ 语音开始播放');
         setIsLoading(false);
         setIsPlaying(true);
         setIsPaused(false);
       };
 
       utterance.onend = () => {
+        console.log('🏁 语音播放结束');
         setIsLoading(false);
         setIsPlaying(false);
         setIsPaused(false);
@@ -158,30 +203,56 @@ function VoicePlayer({ text, className = '' }: VoicePlayerProps) {
       };
 
       utterance.onerror = (event) => {
-        console.error('语音合成错误:', event);
+        console.error('❌ 语音合成错误:', event);
         setIsLoading(false);
         setIsPlaying(false);
         setIsPaused(false);
-        setErrorMessage(`语音播放失败: ${event.error}`);
+        
+        const errorMsg = event.error || '未知错误';
+        const errorMessages: Record<string, string> = {
+          'canceled': '播放被取消',
+          'interrupted': '播放被中断',
+          'audio-busy': '音频设备忙碌',
+          'synthesis-unavailable': '语音合成不可用',
+          'not-allowed': '播放被阻止',
+        };
+        
+        setErrorMessage(`语音播放失败: ${errorMessages[errorMsg] || errorMsg}`);
         utteranceRef.current = null;
       };
 
       utterance.onpause = () => {
+        console.log('⏸️ 语音暂停');
         setIsPaused(true);
       };
 
       utterance.onresume = () => {
+        console.log('▶️ 语音恢复播放');
         setIsPaused(false);
       };
 
       // 开始播放
+      console.log('🚀 调用 speechSynthesis.speak()');
       window.speechSynthesis.speak(utterance);
+      
+      // 添加延迟检查，确保播放开始
+      setTimeout(() => {
+        if (window.speechSynthesis.speaking) {
+          console.log('✅ 语音正在播放');
+        } else {
+          console.warn('⚠️ 语音未开始播放');
+          setIsLoading(false);
+        }
+      }, 100);
+      
     } catch (error) {
-      console.error('启动语音播放失败:', error);
+      console.error('❌ 启动语音播放失败:', error);
       setIsLoading(false);
+      setIsPlaying(false);
+      setIsPaused(false);
       setErrorMessage(`启动失败: ${error instanceof Error ? error.message : '未知错误'}`);
     }
-  }, [text, currentVoice, currentRate, currentPitch, getChineseVoices, stopSpeaking]);
+  }, [text, currentVoice, currentRate, currentPitch, getAllVoices, stopSpeaking]);
 
   // 暂停播放
   const pauseSpeaking = useCallback(() => {
