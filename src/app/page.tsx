@@ -200,20 +200,20 @@ function HomeContent() {
         <div className="text-center mt-12 p-4 bg-white rounded-lg shadow">
           <h3 className="font-bold mb-4">快速测试（点击这些链接应该可以跳转）</h3>
           <div className="flex justify-center gap-4 flex-wrap">
+            <a href="/test-link" style={{ color: 'red', fontWeight: 'bold', fontSize: '20px', padding: '10px', border: '2px solid red', borderRadius: '5px' }}>
+              🔴 极简测试页面（最简单）
+            </a>
+            <a href="/simple" onClick={() => addLog('测试链接: simple')} className="text-blue-600 hover:underline">
+              简单测试页面
+            </a>
             <a href="/daily" onClick={() => addLog('测试链接: daily')} className="text-blue-600 hover:underline">
-              直接跳转到每日背默
+              每日背默
             </a>
             <a href="/practice" onClick={() => addLog('测试链接: practice')} className="text-blue-600 hover:underline">
-              直接跳转到练习模式
+              练习模式
             </a>
             <a href="/test" onClick={() => addLog('测试链接: test')} className="text-blue-600 hover:underline">
-              直接跳转到测试模式
-            </a>
-            <a href="/wrongbook" onClick={() => addLog('测试链接: wrongbook')} className="text-blue-600 hover:underline">
-              直接跳转到错题本
-            </a>
-            <a href="/voice-test" onClick={() => addLog('测试链接: voice-test')} className="text-purple-600 hover:underline font-semibold">
-              🎤 语音朗读测试
+              测试模式
             </a>
           </div>
         </div>

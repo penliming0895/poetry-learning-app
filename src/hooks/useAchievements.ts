@@ -5,6 +5,9 @@ import { UserStats, UserAchievement, Achievement } from '@/types/achievement';
 const STORAGE_KEY = 'user_achievements';
 const STATS_KEY = 'user_stats';
 
+// 临时禁用 localStorage 以诊断移动端崩溃问题
+const DISABLE_LOCAL_STORAGE = true;
+
 const initialStats: UserStats = {
   practiceCount: 0,
   testCount: 0,
@@ -26,6 +29,12 @@ export function useAchievements() {
 
   // 加载用户数据
   useEffect(() => {
+    if (DISABLE_LOCAL_STORAGE) {
+      console.log('⚠️ useAchievements: localStorage 已禁用（诊断模式）');
+      setMounted(true);
+      return;
+    }
+
     try {
       const savedAchievements = localStorage.getItem(STORAGE_KEY);
       const savedStats = localStorage.getItem(STATS_KEY);
@@ -48,6 +57,10 @@ export function useAchievements() {
 
   // 保存用户数据
   const saveAchievements = useCallback((achievements: UserAchievement[]) => {
+    if (DISABLE_LOCAL_STORAGE) {
+      console.log('⚠️ saveAchievements: localStorage 已禁用（诊断模式）');
+      return;
+    }
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(achievements));
     } catch (error) {
@@ -56,6 +69,10 @@ export function useAchievements() {
   }, []);
 
   const saveStats = useCallback((stats: UserStats) => {
+    if (DISABLE_LOCAL_STORAGE) {
+      console.log('⚠️ saveStats: localStorage 已禁用（诊断模式）');
+      return;
+    }
     try {
       localStorage.setItem(STATS_KEY, JSON.stringify(stats));
     } catch (error) {
