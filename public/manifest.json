@@ -1,0 +1,49 @@
+{
+  "name": "初三语文古诗词背默",
+  "short_name": "古诗词背默",
+  "description": "初三语文古诗词背诵与默写练习，支持逐句背诵、智能提示、语音朗读等功能",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#3b82f6",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["education", "study"],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "开始练习",
+      "short_name": "练习",
+      "description": "开始背诵练习",
+      "url": "/practice",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "每日背默",
+      "short_name": "每日",
+      "description": "每日背默任务",
+      "url": "/daily",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "测试模式",
+      "short_name": "测试",
+      "description": "完整诗词测试",
+      "url": "/test",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}
