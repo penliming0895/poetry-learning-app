@@ -11,6 +11,7 @@ import { getDailyPoetry } from '@/data/poetryData';
 import VoicePlayer from '@/components/VoicePlayer';
 import { Poetry } from '@/types/poetry';
 import { useGameProgress } from '@/hooks/useGameProgress';
+import { useAchievements } from '@/hooks/useAchievements';
 
 export default function DailyPage() {
   const [dailyPoems, setDailyPoems] = useState<Poetry[]>([]);

@@ -54,65 +54,30 @@ function VoicePlayer({ text, className = '' }: VoicePlayerProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
-  const [speaker, setSpeaker] = useState('zh_female_xueayi_saturn_bigtts');
-  const [speechRate, setSpeechRate] = useState(0);
+  const [currentSpeaker, setCurrentSpeaker] = useState('zh_female_xueayi_saturn_bigtts');
+  const [currentSpeechRate, setCurrentSpeechRate] = useState(0);
   const [showSettings, setShowSettings] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const isInitializing = useRef(false);
-  const prevSpeakerRef = useRef(speaker);
-  const prevSpeechRateRef = useRef(speechRate);
 
-  // 清理音频资源
+  // 当前使用的音色和语速（用于检测是否需要重新生成）
+  const lastSpeakerRef = useRef(currentSpeaker);
+  const lastSpeechRateRef = useRef(currentSpeechRate);
+  const lastAudioUrlRef = useRef(audioUrl);
+
+  // 更新最后使用的参数
   useEffect(() => {
-    return () => {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current.onloadedmetadata = null;
-        audioRef.current.oncanplay = null;
-        audioRef.current.onplay = null;
-        audioRef.current.onpause = null;
-        audioRef.current.onended = null;
-        audioRef.current.onerror = null;
-        audioRef.current.src = '';
-        audioRef.current = null;
-      }
-    };
-  }, []);
-
-  // 当音色或语速改变时，清除当前音频（使用防抖避免频繁触发）
-  useEffect(() => {
-    const speakerChanged = prevSpeakerRef.current !== speaker;
-    const speechRateChanged = prevSpeechRateRef.current !== speechRate;
-
-    if ((speakerChanged || speechRateChanged) && audioUrl) {
-      // 静默清理，不显示错误
-      if (audioRef.current) {
-        try {
-          audioRef.current.pause();
-          audioRef.current.onended = null;
-          audioRef.current.onerror = null;
-        } catch (e) {
-          // 忽略清理时的错误
-          console.log('清理音频时忽略错误:', e);
-        }
-        audioRef.current = null;
-      }
-      setAudioUrl(null);
-      setIsPlaying(false);
-      setIsLoading(false);
-      isInitializing.current = false;
-    }
-
-    prevSpeakerRef.current = speaker;
-    prevSpeechRateRef.current = speechRate;
-  }, [speaker, speechRate, audioUrl]);
+    lastSpeakerRef.current = currentSpeaker;
+    lastSpeechRateRef.current = currentSpeechRate;
+    lastAudioUrlRef.current = audioUrl;
+  }, [currentSpeaker, currentSpeechRate, audioUrl]);
 
   const handlePlayPause = async (e: React.MouseEvent) => {
     e.stopPropagation();
     e.preventDefault();
 
     console.log('=== VoicePlayer ===');
-    console.log('状态:', { isPlaying, isLoading, hasAudioUrl: !!audioUrl, speaker, speechRate });
+    console.log('状态:', { isPlaying, isLoading, hasAudioUrl: !!audioUrl, speaker: currentSpeaker, speechRate: currentSpeechRate });
 
     // 防止重复初始化
     if (isInitializing.current) {
@@ -154,7 +119,7 @@ function VoicePlayer({ text, className = '' }: VoicePlayerProps) {
 
     try {
       // 检查缓存
-      const cacheKey = `${text}-${speaker}-${speechRate}`;
+      const cacheKey = `${text}-${currentSpeaker}-${currentSpeechRate}`;
       const cached = audioCache.get(cacheKey);
 
       if (cached) {
@@ -165,11 +130,11 @@ function VoicePlayer({ text, className = '' }: VoicePlayerProps) {
         return;
       }
 
-      console.log('📡 调用 TTS API...', { speaker, speechRate });
+      console.log('📡 调用 TTS API...', { speaker: currentSpeaker, speechRate: currentSpeechRate });
       const response = await fetch('/api/tts', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text, speaker, speechRate }),
+        body: JSON.stringify({ text, speaker: currentSpeaker, speechRate: currentSpeechRate }),
       });
 
       console.log('📥 API 响应状态:', response.status);
@@ -356,7 +321,7 @@ function VoicePlayer({ text, className = '' }: VoicePlayerProps) {
             {/* 音色选择 */}
             <div>
               <label className="text-sm font-medium mb-2 block">选择音色</label>
-              <Select value={speaker} onValueChange={setSpeaker}>
+              <Select value={currentSpeaker} onValueChange={setCurrentSpeaker}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
@@ -386,11 +351,11 @@ function VoicePlayer({ text, className = '' }: VoicePlayerProps) {
             {/* 语速调节 */}
             <div>
               <label className="text-sm font-medium mb-2 block">
-                语速: <span className="text-blue-600 font-semibold">{SPEECH_RATE_LABELS[String(speechRate)] || '1.0x'}</span>
+                语速: <span className="text-blue-600 font-semibold">{SPEECH_RATE_LABELS[String(currentSpeechRate)] || '1.0x'}</span>
               </label>
               <Slider
-                value={[speechRate]}
-                onValueChange={(values) => setSpeechRate(values[0])}
+                value={[currentSpeechRate]}
+                onValueChange={(values) => setCurrentSpeechRate(values[0])}
                 min={-5}
                 max={5}
                 step={2}
