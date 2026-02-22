@@ -12,6 +12,7 @@ import VoicePlayer from '@/components/VoicePlayer';
 import { poetryDatabase, getPoetryById } from '@/data/poetryData';
 import { Poetry } from '@/types/poetry';
 import { useGameProgress } from '@/hooks/useGameProgress';
+import { useAchievements } from '@/hooks/useAchievements';
 
 export default function PracticePage() {
   const searchParams = useSearchParams();
@@ -25,6 +26,7 @@ export default function PracticePage() {
   const [showHint, setShowHint] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
   const { recordPractice, recordWrongLine } = useGameProgress();
+  const { recordPractice: recordPracticeAchievement, recordWrongLineReview } = useAchievements();
 
   // 如果有poemId，跳转到对应的诗词
   useEffect(() => {
@@ -53,6 +55,7 @@ export default function PracticePage() {
         currentPoetry.lines[currentLineIndex],
         currentPoetry.author
       );
+      recordWrongLineReview();
     }
 
     setTimeout(() => {
@@ -64,7 +67,9 @@ export default function PracticePage() {
       } else {
         // 记录练习进度
         const finalCorrectCount = isCorrect ? correctCount + 1 : correctCount;
+        const score = Math.round((finalCorrectCount / totalLines) * 100);
         recordPractice(currentPoetry.id, finalCorrectCount, totalLines);
+        recordPracticeAchievement(currentPoetry.id, score);
         setCompleted(true);
         setIsAnimating(false);
       }

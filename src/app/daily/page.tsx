@@ -17,6 +17,7 @@ export default function DailyPage() {
   const [currentPoetryIndex, setCurrentPoetryIndex] = useState(0);
   const [completed, setCompleted] = useState<Set<number>>(new Set());
   const { recordPractice, recordTest, getBestScore, mounted } = useGameProgress();
+  const { recordDaily, recordPractice: recordDailyPractice, recordTest: recordDailyTest } = useAchievements();
 
   useEffect(() => {
     setDailyPoems(getDailyPoetry());
@@ -31,6 +32,9 @@ export default function DailyPage() {
     const poem = dailyPoems[index];
     if (score >= 60) {
       recordTest(poem.id, score);
+      recordDailyTest(poem.id, score);
+      recordDailyPractice(poem.id, score);
+      recordDaily();
     }
 
     // 自动跳转到下一首

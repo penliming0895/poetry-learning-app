@@ -1,11 +1,18 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Sparkles, Star } from 'lucide-react';
+import { Sparkles, Star, Award } from 'lucide-react';
 import { useGameProgress } from '@/hooks/useGameProgress';
+
+// 动态导入成就相关组件，提升首屏加载速度
+const AchievementCard = dynamic(() => import('@/components/AchievementCard').then(mod => ({ default: mod.default })), {
+  loading: () => <div className="animate-pulse bg-gray-200 dark:bg-gray-700 rounded-lg h-32" />,
+  ssr: false,
+});
 
 export default function Home() {
   const { getUnmasteredWrong, mounted } = useGameProgress();
@@ -118,7 +125,7 @@ export default function Home() {
             选择游戏模式
             <Star className="h-6 w-6 text-yellow-500" />
           </h2>
-          <div className="grid gap-6 md:grid-cols-3">
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
             <div
               onClick={(e) => handleCardClick('practice', e)}
               onMouseDown={() => addLog('mousedown: practice')}
@@ -194,6 +201,40 @@ export default function Home() {
                     }`}
                   >
                     {totalWrongCount > 0 ? '开始复习 🔥' : '查看错题本 📋'}
+                  </button>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* 成就系统 */}
+            <div
+              onClick={(e) => handleCardClick('achievements', e)}
+              onMouseDown={() => addLog('mousedown: achievements')}
+              onMouseUp={() => addLog('mouseup: achievements')}
+              className="cursor-pointer"
+            >
+              <Card className="border-2 border-yellow-200 hover:scale-[1.02] hover:shadow-xl transition-all h-full bg-gradient-to-br from-yellow-50 to-amber-50 dark:from-yellow-900/20 dark:to-amber-900/20">
+                <CardHeader>
+                  <CardTitle className="text-xl flex items-center gap-2">
+                    🏆 成就系统
+                    <Badge className="bg-gradient-to-r from-yellow-500 to-amber-500">NEW</Badge>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-600 dark:text-gray-400 mb-4">解锁成就，收集徽章，展示你的学习成果</p>
+                  <div className="mb-3">
+                    <div className="flex items-center justify-between text-sm mb-1">
+                      <span className="text-gray-600 dark:text-gray-400">已解锁成就</span>
+                      <span className="font-semibold text-yellow-600 dark:text-yellow-400">查看详情 →</span>
+                    </div>
+                  </div>
+                  <button
+                    onClick={(e) => handleButtonClick('achievements', e)}
+                    onMouseDown={() => addLog('mousedown button: achievements')}
+                    onMouseUp={() => addLog('mouseup button: achievements')}
+                    className="w-full bg-gradient-to-r from-yellow-500 to-amber-500 text-white py-2 rounded-lg font-semibold hover:from-yellow-600 hover:to-amber-600 transition-all"
+                  >
+                    查看成就 ✨
                   </button>
                 </CardContent>
               </Card>

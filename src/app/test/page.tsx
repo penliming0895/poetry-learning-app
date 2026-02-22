@@ -12,6 +12,7 @@ import VoicePlayer from '@/components/VoicePlayer';
 import { poetryDatabase } from '@/data/poetryData';
 import { Poetry } from '@/types/poetry';
 import { useGameProgress } from '@/hooks/useGameProgress';
+import { useAchievements } from '@/hooks/useAchievements';
 
 export default function TestPage() {
   const searchParams = useSearchParams();
@@ -23,6 +24,7 @@ export default function TestPage() {
   const [score, setScore] = useState(0);
   const [matchedLines, setMatchedLines] = useState<number[]>([]);
   const { recordTest, recordWrongPoetry } = useGameProgress();
+  const { recordTest: recordTestAchievement } = useAchievements();
 
   // 如果有poemId，自动选择对应的诗词
   useEffect(() => {
@@ -75,6 +77,7 @@ export default function TestPage() {
 
     // 记录测试进度
     recordTest(selectedPoetry.id, finalScore);
+    recordTestAchievement(selectedPoetry.id, finalScore);
 
     // 如果得分低于60分，记录为错题
     if (finalScore < 60) {

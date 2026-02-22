@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, memo } from 'react';
 import { Button } from '@/components/ui/button';
 import { Volume2, VolumeX, Loader2, Settings2 } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -50,7 +50,7 @@ setInterval(() => {
   });
 }, 5 * 60 * 1000); // 每5分钟清理一次
 
-export default function VoicePlayer({ text, className = '' }: VoicePlayerProps) {
+function VoicePlayer({ text, className = '' }: VoicePlayerProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
@@ -385,3 +385,5 @@ export default function VoicePlayer({ text, className = '' }: VoicePlayerProps) 
     </div>
   );
 }
+
+export default memo(VoicePlayer);
