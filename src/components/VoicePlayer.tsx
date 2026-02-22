@@ -57,19 +57,46 @@ function VoicePlayer({ text, className = '' }: VoicePlayerProps) {
   const [currentSpeaker, setCurrentSpeaker] = useState('zh_female_xueayi_saturn_bigtts');
   const [currentSpeechRate, setCurrentSpeechRate] = useState(0);
   const [showSettings, setShowSettings] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const isInitializing = useRef(false);
 
-  // 当前使用的音色和语速（用于检测是否需要重新生成）
-  const lastSpeakerRef = useRef(currentSpeaker);
-  const lastSpeechRateRef = useRef(currentSpeechRate);
-  const lastAudioUrlRef = useRef(audioUrl);
+  // 跟踪生成音频时使用的参数
+  const generatedSpeakerRef = useRef(currentSpeaker);
+  const generatedSpeechRateRef = useRef(currentSpeechRate);
 
-  // 更新最后使用的参数
+  // 当音色或语速改变时，清除当前音频，强制重新生成
   useEffect(() => {
-    lastSpeakerRef.current = currentSpeaker;
-    lastSpeechRateRef.current = currentSpeechRate;
-    lastAudioUrlRef.current = audioUrl;
+    // 如果参数改变，清除音频 URL 和播放状态
+    if (audioUrl && (generatedSpeakerRef.current !== currentSpeaker || generatedSpeechRateRef.current !== currentSpeechRate)) {
+      console.log('🔄 参数改变，清除旧音频:', {
+        from: { speaker: generatedSpeakerRef.current, rate: generatedSpeechRateRef.current },
+        to: { speaker: currentSpeaker, rate: currentSpeechRate }
+      });
+
+      // 清理音频
+      if (audioRef.current) {
+        try {
+          audioRef.current.pause();
+          audioRef.current.onended = null;
+          audioRef.current.onerror = null;
+          audioRef.current.src = '';
+          audioRef.current.load();
+        } catch (e) {
+          console.log('清理音频时忽略错误:', e);
+        }
+        audioRef.current = null;
+      }
+
+      setAudioUrl(null);
+      setIsPlaying(false);
+      setIsLoading(false);
+      isInitializing.current = false;
+    }
+
+    // 更新当前参数
+    generatedSpeakerRef.current = currentSpeaker;
+    generatedSpeechRateRef.current = currentSpeechRate;
   }, [currentSpeaker, currentSpeechRate, audioUrl]);
 
   const handlePlayPause = async (e: React.MouseEvent) => {
@@ -164,7 +191,7 @@ function VoicePlayer({ text, className = '' }: VoicePlayerProps) {
     } catch (error) {
       console.error('❌ 生成音频失败:', error);
       const errorMsg = error instanceof Error ? error.message : '未知错误';
-      alert(`语音播放失败: ${errorMsg}\n\n请检查网络连接或稍后重试`);
+      setErrorMessage(`语音播放失败: ${errorMsg}`);
       setIsLoading(false);
     } finally {
       isInitializing.current = false;
@@ -238,7 +265,7 @@ function VoicePlayer({ text, className = '' }: VoicePlayerProps) {
       setIsPlaying(false);
       setIsLoading(false);
       const errorMsg = audio.error?.message || '未知错误';
-      alert(`音频播放错误: ${errorMsg}`);
+      setErrorMessage(`音频播放错误: ${errorMsg}`);
     };
 
     audio.load();
@@ -258,7 +285,7 @@ function VoicePlayer({ text, className = '' }: VoicePlayerProps) {
             console.error('❌ audio.play() 失败:', err);
             setIsPlaying(false);
             setIsLoading(false);
-            alert(`播放失败: ${err.message}`);
+            setErrorMessage(`播放失败: ${err.message}`);
           });
       }
     }, 200);
@@ -272,7 +299,7 @@ function VoicePlayer({ text, className = '' }: VoicePlayerProps) {
         })
         .catch((err) => {
           console.error('❌ 恢复播放失败:', err);
-          alert(`恢复播放失败: ${err.message}`);
+          setErrorMessage(`恢复播放失败: ${err.message}`);
         });
     }
   };

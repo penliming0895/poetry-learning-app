@@ -10,7 +10,13 @@ import { ArrowLeft, Trophy, Sparkles, Target, Flame, Award, Star, Calendar, Book
 import AchievementCard from '@/components/AchievementCard';
 import AchievementNotification from '@/components/AchievementNotification';
 import { useAchievements } from '@/hooks/useAchievements';
+import { Achievement } from '@/types/achievement';
 import { achievementsByType, tierOrder } from '@/data/achievements';
+
+// 运行时扩展的成就类型
+type AchievementWithUnlockStatus = Achievement & {
+  unlockedAt?: number;
+};
 
 export default function AchievementsPage() {
   const {
@@ -55,7 +61,7 @@ export default function AchievementsPage() {
   );
 
   // 按类型分组成就
-  const achievementsByCategory = useMemo(() => {
+  const achievementsByCategory: Record<string, AchievementWithUnlockStatus[]> = useMemo(() => {
     if (!mounted) return {};
 
     const categories = {
