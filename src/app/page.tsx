@@ -11,101 +11,39 @@ import { ErrorBoundary } from '@/components/ErrorBoundary';
 function HomeContent() {
   try {
     const { getUnmasteredWrong, mounted } = useGameProgress();
-    const [clickLog, setClickLog] = useState<string[]>([]);
-    const [showDebug, setShowDebug] = useState(false);
 
     // 计算错题总数
     const wrongPoetryCount = mounted ? getUnmasteredWrong('poetry').length : 0;
     const wrongLineCount = mounted ? getUnmasteredWrong('line').length : 0;
     const totalWrongCount = wrongPoetryCount + wrongLineCount;
 
-    const addLog = (message: string) => {
-      const timestamp = new Date().toLocaleTimeString();
-      setClickLog(prev => [`[${timestamp}] ${message}`, ...prev]);
-      console.log(message);
-    };
-
-    // 全局错误监听
-    useEffect(() => {
-      const handleError = (event: ErrorEvent) => {
-        const errorMsg = `Global Error: ${event.message}`;
-        addLog(errorMsg);
-        console.error('全局错误:', event);
-      };
-
-      const handleUnhandledRejection = (event: PromiseRejectionEvent) => {
-        const errorMsg = `Unhandled Promise Rejection: ${event.reason}`;
-        addLog(errorMsg);
-        console.error('未处理的 Promise 拒绝:', event);
-      };
-
-      window.addEventListener('error', handleError);
-      window.addEventListener('unhandledrejection', handleUnhandledRejection);
-
-      return () => {
-        window.removeEventListener('error', handleError);
-        window.removeEventListener('unhandledrejection', handleUnhandledRejection);
-      };
-    }, []);
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-purple-900 p-4 relative">
-      {/* 调试面板 */}
-      {showDebug && (
-        <div className="fixed top-0 right-0 w-80 max-h-96 bg-black text-green-400 p-4 overflow-y-auto z-[9999] font-mono text-xs">
-          <button
-            onClick={() => setShowDebug(false)}
-            className="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded"
-          >
-            关闭
-          </button>
-          <div className="mt-6">
-            <div className="font-bold mb-2">点击日志:</div>
-            {clickLog.length === 0 && <div>暂无点击记录</div>}
-            {clickLog.map((log, i) => (
-              <div key={i} className="mb-1">{log}</div>
-            ))}
-          </div>
-          <button
-            onClick={() => {
-              addLog('清除日志');
-              setClickLog([]);
-            }}
-            className="mt-4 bg-blue-500 text-white px-2 py-1 rounded"
-          >
-            清除日志
-          </button>
-        </div>
-      )}
-
-      {/* 调试按钮 */}
-      <button
-        onClick={() => setShowDebug(!showDebug)}
-        className="fixed top-2 right-2 z-[9999] bg-gray-800 text-white px-3 py-1 rounded text-xs"
-      >
-        {showDebug ? '隐藏调试' : '显示调试'}
-      </button>
-
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-purple-900 p-4">
       <div className="container mx-auto py-8 relative z-10">
-        <h1 className="text-4xl font-extrabold text-center mb-12 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
-          初三语文古诗词背默
-        </h1>
+        <div className="text-center mb-12">
+          <h1 className="text-5xl md:text-6xl font-extrabold mb-4 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent animate-gradient">
+            初三语文古诗词背默
+          </h1>
+          <p className="text-gray-600 dark:text-gray-300 text-lg">
+            积少成多，日有所成
+          </p>
+        </div>
 
-        <div className="mb-8">
+        <div className="mb-10">
           <h2 className="text-2xl font-semibold text-center mb-6 flex items-center justify-center gap-2">
-            <Sparkles className="h-6 w-6 text-yellow-500" />
+            <Sparkles className="h-6 w-6 text-yellow-500 animate-pulse" />
             今日任务
-            <Sparkles className="h-6 w-6 text-yellow-500" />
+            <Sparkles className="h-6 w-6 text-yellow-500 animate-pulse" />
           </h2>
           <Link href="/daily" className="block">
-            <Card className="border-2 border-orange-200 hover:scale-[1.02] hover:shadow-xl transition-all">
-              <CardContent className="p-6">
+            <Card className="border-2 border-orange-200 hover:scale-[1.02] hover:shadow-2xl hover:shadow-orange-200/50 transition-all duration-300 bg-gradient-to-br from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20">
+              <CardContent className="p-8">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h3 className="text-xl font-bold">📅 每日背默5首</h3>
-                    <p className="text-gray-600 mt-1">根据日期自动轮换，每天5首新诗词</p>
+                    <h3 className="text-2xl font-bold mb-2">📅 每日背默5首</h3>
+                    <p className="text-gray-600 dark:text-gray-300">根据日期自动轮换，每天5首新诗词</p>
                   </div>
-                  <div className="bg-gradient-to-r from-orange-500 to-red-500 text-white px-6 py-2 rounded-lg font-semibold hover:from-orange-600 hover:to-red-600 transition-all">
+                  <div className="bg-gradient-to-r from-orange-500 to-red-500 text-white px-8 py-3 rounded-xl font-semibold hover:from-orange-600 hover:to-red-600 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
                     开始今日任务 🚀
                   </div>
                 </div>
@@ -114,21 +52,21 @@ function HomeContent() {
           </Link>
         </div>
 
-        <div className="mb-8">
+        <div className="mb-10">
           <h2 className="text-2xl font-semibold text-center mb-6 flex items-center justify-center gap-2">
-            <Star className="h-6 w-6 text-yellow-500" />
+            <Star className="h-6 w-6 text-yellow-500 animate-pulse" />
             选择游戏模式
-            <Star className="h-6 w-6 text-yellow-500" />
+            <Star className="h-6 w-6 text-yellow-500 animate-pulse" />
           </h2>
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
             <Link href="/practice" className="block">
-              <Card className="border-2 border-blue-200 hover:scale-[1.02] hover:shadow-xl transition-all h-full">
+              <Card className="border-2 border-blue-200 hover:scale-[1.02] hover:shadow-2xl hover:shadow-blue-200/50 transition-all duration-300 h-full bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20">
                 <CardHeader>
                   <CardTitle className="text-xl">📖 背诵练习模式</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-600 mb-4">逐句背诵，智能提示，轻松掌握每首诗词</p>
-                  <div className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white py-2 rounded-lg font-semibold hover:from-blue-600 hover:to-indigo-700 transition-all text-center">
+                  <p className="text-gray-600 dark:text-gray-300 mb-4">逐句背诵，智能提示，轻松掌握每首诗词</p>
+                  <div className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white py-3 rounded-lg font-semibold hover:from-blue-600 hover:to-indigo-700 transition-all duration-300 text-center shadow-md hover:shadow-lg transform hover:scale-105">
                     开始练习 💪
                   </div>
                 </CardContent>
@@ -136,13 +74,13 @@ function HomeContent() {
             </Link>
 
             <Link href="/test" className="block">
-              <Card className="border-2 border-purple-200 hover:scale-[1.02] hover:shadow-xl transition-all h-full">
+              <Card className="border-2 border-purple-200 hover:scale-[1.02] hover:shadow-2xl hover:shadow-purple-200/50 transition-all duration-300 h-full bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20">
                 <CardHeader>
                   <CardTitle className="text-xl">✍️ 默写测试模式</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-600 mb-4">完整默写，智能评分，检验学习成果</p>
-                  <div className="w-full bg-gradient-to-r from-purple-500 to-pink-600 text-white py-2 rounded-lg font-semibold hover:from-purple-600 hover:to-pink-700 transition-all text-center">
+                  <p className="text-gray-600 dark:text-gray-300 mb-4">完整默写，智能评分，检验学习成果</p>
+                  <div className="w-full bg-gradient-to-r from-purple-500 to-pink-600 text-white py-3 rounded-lg font-semibold hover:from-purple-600 hover:to-pink-700 transition-all duration-300 text-center shadow-md hover:shadow-lg transform hover:scale-105">
                     开始测试 🎯
                   </div>
                 </CardContent>
@@ -150,20 +88,20 @@ function HomeContent() {
             </Link>
 
             <Link href="/wrongbook" className="block">
-              <Card className="border-2 border-red-200 hover:scale-[1.02] hover:shadow-xl transition-all h-full">
+              <Card className={`border-2 ${totalWrongCount > 0 ? 'border-red-300' : 'border-gray-200'} hover:scale-[1.02] hover:shadow-2xl ${totalWrongCount > 0 ? 'hover:shadow-red-200/50' : ''} transition-all duration-300 h-full ${totalWrongCount > 0 ? 'bg-gradient-to-br from-red-50 to-orange-50 dark:from-red-900/20 dark:to-orange-900/20' : 'bg-white dark:bg-gray-800'}`}>
                 <CardHeader>
                   <CardTitle className="text-xl">📋 错题本</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-600 mb-4">
+                  <p className="text-gray-600 dark:text-gray-300 mb-4">
                     {totalWrongCount > 0
                       ? `${totalWrongCount} 道错题等待复习`
                       : '记录错题，重点复习'}
                   </p>
-                  <div className={`w-full py-2 rounded-lg font-semibold transition-all text-center ${
+                  <div className={`w-full py-3 rounded-lg font-semibold transition-all duration-300 text-center shadow-md hover:shadow-lg transform hover:scale-105 ${
                     totalWrongCount > 0
                       ? 'bg-gradient-to-r from-red-500 to-orange-500 text-white hover:from-red-600 hover:to-orange-600'
-                      : 'border-2 border-gray-300 text-gray-700 hover:bg-gray-100'
+                      : 'border-2 border-gray-300 text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700'
                   }`}>
                     {totalWrongCount > 0 ? '开始复习 🔥' : '查看错题本 📋'}
                   </div>
@@ -172,11 +110,11 @@ function HomeContent() {
             </Link>
 
             <Link href="/achievements" className="block">
-              <Card className="border-2 border-yellow-200 hover:scale-[1.02] hover:shadow-xl transition-all h-full bg-gradient-to-br from-yellow-50 to-amber-50 dark:from-yellow-900/20 dark:to-amber-900/20">
+              <Card className="border-2 border-yellow-200 hover:scale-[1.02] hover:shadow-2xl hover:shadow-yellow-200/50 transition-all duration-300 h-full bg-gradient-to-br from-yellow-50 to-amber-50 dark:from-yellow-900/20 dark:to-amber-900/20">
                 <CardHeader>
                   <CardTitle className="text-xl flex items-center gap-2">
                     🏆 成就系统
-                    <Badge className="bg-gradient-to-r from-yellow-500 to-amber-500">NEW</Badge>
+                    <Badge className="bg-gradient-to-r from-yellow-500 to-amber-500 shadow-md">NEW</Badge>
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -187,7 +125,7 @@ function HomeContent() {
                       <span className="font-semibold text-yellow-600 dark:text-yellow-400">查看详情 →</span>
                     </div>
                   </div>
-                  <div className="w-full bg-gradient-to-r from-yellow-500 to-amber-500 text-white py-2 rounded-lg font-semibold hover:from-yellow-600 hover:to-amber-600 transition-all text-center">
+                  <div className="w-full bg-gradient-to-r from-yellow-500 to-amber-500 text-white py-3 rounded-lg font-semibold hover:from-yellow-600 hover:to-amber-600 transition-all duration-300 text-center shadow-md hover:shadow-lg transform hover:scale-105">
                     查看成就 ✨
                   </div>
                 </CardContent>
@@ -196,57 +134,40 @@ function HomeContent() {
           </div>
         </div>
 
-        {/* 快速测试链接 */}
-        <div className="text-center mt-12 p-4 bg-white rounded-lg shadow">
-          <h3 className="font-bold mb-4">🔍 渐进式诊断测试</h3>
-          <p className="text-gray-600 mb-4">请按顺序点击以下链接，找出问题所在：</p>
-          <div className="flex flex-col items-center gap-4">
-            <div className="flex items-center gap-2">
-              <span className="text-2xl">1️⃣</span>
-              <a href="/test-link" style={{ color: 'red', fontWeight: 'bold', fontSize: '18px', padding: '8px', border: '2px solid red', borderRadius: '5px' }}>
-                极简测试（纯HTML）✅ 已通过
-              </a>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-2xl">2️⃣</span>
-              <a href="/test-ui" style={{ color: 'blue', fontWeight: 'bold', fontSize: '18px', padding: '8px', border: '2px solid blue', borderRadius: '5px' }}>
-                UI组件测试（shadcn/ui）
-              </a>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-2xl">3️⃣</span>
-              <a href="/test-data" style={{ color: 'green', fontWeight: 'bold', fontSize: '18px', padding: '8px', border: '2px solid green', borderRadius: '5px' }}>
-                数据加载测试（useState/useEffect）
-              </a>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-2xl">4️⃣</span>
-              <a href="/test-hook" style={{ color: 'purple', fontWeight: 'bold', fontSize: '18px', padding: '8px', border: '2px solid purple', borderRadius: '5px' }}>
-                Hook测试（useGameProgress）
-              </a>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-2xl">5️⃣</span>
-              <a href="/test-voice-simple" style={{ color: 'pink', fontWeight: 'bold', fontSize: '18px', padding: '8px', border: '2px solid pink', borderRadius: '5px' }}>
-                🎤 简化版语音测试（NEW）
-              </a>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-2xl">6️⃣</span>
-              <a href="/daily" className="text-orange-600 font-bold hover:underline text-lg">
-                实际功能：每日背默
-              </a>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-2xl">7️⃣</span>
-              <a href="/practice" className="text-blue-600 font-bold hover:underline text-lg">
-                实际功能：背诵练习
-              </a>
-            </div>
+        {/* 底部提示信息 */}
+        <div className="text-center mt-12 p-6 bg-gradient-to-r from-blue-50 via-purple-50 to-pink-50 dark:from-blue-900/20 dark:via-purple-900/20 dark:to-pink-900/20 rounded-xl shadow-lg border border-blue-100 dark:border-blue-800">
+          <h3 className="font-bold text-lg mb-3 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            💡 学习小贴士
+          </h3>
+          <div className="space-y-2 text-gray-600 dark:text-gray-300 text-sm">
+            <p>📚 建议每天坚持背诵，积少成多，日有所成</p>
+            <p>🎯 配合错题本复习，攻克难点，事半功倍</p>
+            <p>🏆 完成每日任务解锁成就，展示你的学习成果</p>
           </div>
-          <p className="text-gray-500 mt-4 text-sm">请在哪个测试失败后告诉我测试编号</p>
+          <div className="mt-4 flex justify-center items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+            <span>🎧 语音朗读功能推荐使用</span>
+            <span className="font-semibold">Chrome</span>
+            <span>或</span>
+            <span className="font-semibold">Firefox</span>
+            <span>浏览器</span>
+          </div>
         </div>
       </div>
+
+      <style jsx global>{`
+        @keyframes gradient {
+          0%, 100% {
+            background-position: 0% 50%;
+          }
+          50% {
+            background-position: 100% 50%;
+          }
+        }
+        .animate-gradient {
+          background-size: 200% auto;
+          animation: gradient 5s linear infinite;
+        }
+      `}</style>
     </div>
     );
   } catch (error) {
