@@ -27,7 +27,24 @@ export const useGameProgress = () => {
 
   // 从 localStorage 加载进度
   useEffect(() => {
+    // 确保只在客户端执行
+    if (typeof window === 'undefined') {
+      setMounted(true);
+      return;
+    }
+
     try {
+      // 检查 localStorage 是否可用
+      const testKey = '__storage_test__';
+      try {
+        localStorage.setItem(testKey, testKey);
+        localStorage.removeItem(testKey);
+      } catch (e) {
+        console.warn('localStorage 不可用:', e);
+        setMounted(true);
+        return;
+      }
+
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
         const parsed = JSON.parse(saved);
@@ -50,13 +67,14 @@ export const useGameProgress = () => {
       }
     } catch (error) {
       console.error('Failed to load progress:', error);
+      setProgress(defaultProgress);
     }
     setMounted(true);
   }, []);
 
   // 保存进度到 localStorage
   useEffect(() => {
-    if (mounted) {
+    if (mounted && typeof window !== 'undefined') {
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
       } catch (error) {
