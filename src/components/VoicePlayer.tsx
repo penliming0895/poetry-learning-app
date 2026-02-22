@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect, memo } from 'react';
+import { useState, useRef, useEffect, memo, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Volume2, VolumeX, Loader2, Settings2 } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -59,6 +59,8 @@ function VoicePlayer({ text, className = '' }: VoicePlayerProps) {
   const [showSettings, setShowSettings] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const isInitializing = useRef(false);
+  const prevSpeakerRef = useRef(speaker);
+  const prevSpeechRateRef = useRef(speechRate);
 
   // 清理音频资源
   useEffect(() => {
@@ -77,18 +79,33 @@ function VoicePlayer({ text, className = '' }: VoicePlayerProps) {
     };
   }, []);
 
-  // 当音色或语速改变时，清除当前音频
+  // 当音色或语速改变时，清除当前音频（使用防抖避免频繁触发）
   useEffect(() => {
-    if (audioUrl) {
+    const speakerChanged = prevSpeakerRef.current !== speaker;
+    const speechRateChanged = prevSpeechRateRef.current !== speechRate;
+
+    if ((speakerChanged || speechRateChanged) && audioUrl) {
+      // 静默清理，不显示错误
       if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current.src = '';
+        try {
+          audioRef.current.pause();
+          audioRef.current.onended = null;
+          audioRef.current.onerror = null;
+        } catch (e) {
+          // 忽略清理时的错误
+          console.log('清理音频时忽略错误:', e);
+        }
         audioRef.current = null;
       }
       setAudioUrl(null);
       setIsPlaying(false);
+      setIsLoading(false);
+      isInitializing.current = false;
     }
-  }, [speaker, speechRate]);
+
+    prevSpeakerRef.current = speaker;
+    prevSpeechRateRef.current = speechRate;
+  }, [speaker, speechRate, audioUrl]);
 
   const handlePlayPause = async (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -192,17 +209,23 @@ function VoicePlayer({ text, className = '' }: VoicePlayerProps) {
   const createAndPlayAudio = (url: string) => {
     console.log('🎵 创建音频对象:', url);
 
-    // 清理之前的音频
+    // 清理之前的音频（静默处理错误）
     if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current.onloadedmetadata = null;
-      audioRef.current.oncanplay = null;
-      audioRef.current.onplay = null;
-      audioRef.current.onpause = null;
-      audioRef.current.onended = null;
-      audioRef.current.onerror = null;
-      audioRef.current.src = '';
-      audioRef.current.load();
+      try {
+        audioRef.current.onloadedmetadata = null;
+        audioRef.current.oncanplay = null;
+        audioRef.current.onplay = null;
+        audioRef.current.onpause = null;
+        audioRef.current.onended = null;
+        audioRef.current.onerror = null;
+        audioRef.current.pause();
+        audioRef.current.src = '';
+        audioRef.current.load();
+      } catch (e) {
+        // 忽略清理时的错误
+        console.log('清理旧音频时忽略错误:', e);
+      }
+      audioRef.current = null;
     }
 
     const audio = new Audio();
