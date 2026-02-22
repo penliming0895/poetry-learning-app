@@ -206,11 +206,7 @@ export default function DailyPage() {
                       <p className="text-base text-gray-700 dark:text-gray-300 leading-relaxed mb-3">
                         {poem.content.substring(0, 50)}...
                       </p>
-                      {/* 临时禁用 VoicePlayer 以诊断问题 */}
-                      {/* <VoicePlayer text={poem.content} /> */}
-                      <div className="text-gray-500 text-sm">
-                        🎤 语音朗读已临时禁用（诊断模式）
-                      </div>
+                      <VoicePlayer text={poem.content} />
                     </div>
 
                     <div className="flex gap-3">

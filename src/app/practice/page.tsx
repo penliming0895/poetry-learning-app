@@ -276,9 +276,8 @@ export default function PracticePage() {
                       <div className="text-2xl font-extrabold text-gray-900 dark:text-gray-100 animate-fade-in tracking-tight mb-3">
                         {currentPoetry.lines[currentLineIndex]}
                       </div>
-                      {/* 临时禁用 VoicePlayer 以诊断问题 */}
-                      <div className="text-gray-500 text-sm text-center">
-                        🎤 语音朗读已临时禁用（诊断模式）
+                      <div className="flex justify-center">
+                        <VoicePlayer text={currentPoetry.lines[currentLineIndex]} />
                       </div>
                     </div>
                   ) : (
