@@ -198,24 +198,47 @@ function HomeContent() {
 
         {/* 快速测试链接 */}
         <div className="text-center mt-12 p-4 bg-white rounded-lg shadow">
-          <h3 className="font-bold mb-4">快速测试（点击这些链接应该可以跳转）</h3>
-          <div className="flex justify-center gap-4 flex-wrap">
-            <a href="/test-link" style={{ color: 'red', fontWeight: 'bold', fontSize: '20px', padding: '10px', border: '2px solid red', borderRadius: '5px' }}>
-              🔴 极简测试页面（最简单）
-            </a>
-            <a href="/simple" onClick={() => addLog('测试链接: simple')} className="text-blue-600 hover:underline">
-              简单测试页面
-            </a>
-            <a href="/daily" onClick={() => addLog('测试链接: daily')} className="text-blue-600 hover:underline">
-              每日背默
-            </a>
-            <a href="/practice" onClick={() => addLog('测试链接: practice')} className="text-blue-600 hover:underline">
-              练习模式
-            </a>
-            <a href="/test" onClick={() => addLog('测试链接: test')} className="text-blue-600 hover:underline">
-              测试模式
-            </a>
+          <h3 className="font-bold mb-4">🔍 渐进式诊断测试</h3>
+          <p className="text-gray-600 mb-4">请按顺序点击以下链接，找出问题所在：</p>
+          <div className="flex flex-col items-center gap-4">
+            <div className="flex items-center gap-2">
+              <span className="text-2xl">1️⃣</span>
+              <a href="/test-link" style={{ color: 'red', fontWeight: 'bold', fontSize: '18px', padding: '8px', border: '2px solid red', borderRadius: '5px' }}>
+                极简测试（纯HTML）✅ 已通过
+              </a>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-2xl">2️⃣</span>
+              <a href="/test-ui" style={{ color: 'blue', fontWeight: 'bold', fontSize: '18px', padding: '8px', border: '2px solid blue', borderRadius: '5px' }}>
+                UI组件测试（shadcn/ui）
+              </a>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-2xl">3️⃣</span>
+              <a href="/test-data" style={{ color: 'green', fontWeight: 'bold', fontSize: '18px', padding: '8px', border: '2px solid green', borderRadius: '5px' }}>
+                数据加载测试（useState/useEffect）
+              </a>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-2xl">4️⃣</span>
+              <a href="/test-hook" style={{ color: 'purple', fontWeight: 'bold', fontSize: '18px', padding: '8px', border: '2px solid purple', borderRadius: '5px' }}>
+                Hook测试（useGameProgress）
+              </a>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-2xl">5️⃣</span>
+              <a href="/daily" className="text-orange-600 font-bold hover:underline text-lg">
+                实际功能：每日背默
+              </a>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-2xl">6️⃣</span>
+              <a href="/practice" className="text-blue-600 font-bold hover:underline text-lg">
+                实际功能：背诵练习
+              </a>
+            </div>
           </div>
+          <p className="text-gray-500 mt-4 text-sm">请在哪个测试失败后告诉我测试编号</p>
         </div>
       </div>
     </div>
