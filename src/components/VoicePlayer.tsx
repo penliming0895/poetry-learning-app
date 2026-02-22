@@ -164,6 +164,15 @@ function VoicePlayer({ text, className = '' }: VoicePlayerProps) {
     setErrorMessage(null);
 
     try {
+      // 确保语音合成服务已就绪
+      window.speechSynthesis.cancel();
+      
+      // 尝试恢复服务（解决 Chrome 的中断问题）
+      if (!window.speechSynthesis.speaking) {
+        window.speechSynthesis.resume();
+      }
+
+      // 创建新的 utterance
       const utterance = new SpeechSynthesisUtterance(text);
       utteranceRef.current = utterance;
 
@@ -204,17 +213,21 @@ function VoicePlayer({ text, className = '' }: VoicePlayerProps) {
 
       utterance.onerror = (event) => {
         console.error('❌ 语音合成错误:', event);
+        console.error('错误类型:', event.error);
+        console.error('是否被中断:', event.error === 'interrupted');
+        
         setIsLoading(false);
         setIsPlaying(false);
         setIsPaused(false);
         
-        const errorMsg = event.error || '未知错误';
+        const errorMsg = event.error || 'unknown';
         const errorMessages: Record<string, string> = {
           'canceled': '播放被取消',
           'interrupted': '播放被中断',
           'audio-busy': '音频设备忙碌',
           'synthesis-unavailable': '语音合成不可用',
           'not-allowed': '播放被阻止',
+          'unknown': '未知错误',
         };
         
         setErrorMessage(`语音播放失败: ${errorMessages[errorMsg] || errorMsg}`);
@@ -231,19 +244,31 @@ function VoicePlayer({ text, className = '' }: VoicePlayerProps) {
         setIsPaused(false);
       };
 
-      // 开始播放
-      console.log('🚀 调用 speechSynthesis.speak()');
-      window.speechSynthesis.speak(utterance);
-      
-      // 添加延迟检查，确保播放开始
+      // 短暂延迟确保语音合成服务已就绪
       setTimeout(() => {
-        if (window.speechSynthesis.speaking) {
-          console.log('✅ 语音正在播放');
-        } else {
-          console.warn('⚠️ 语音未开始播放');
+        console.log('🚀 调用 speechSynthesis.speak()');
+        
+        try {
+          window.speechSynthesis.speak(utterance);
+          
+          // 验证播放状态
+          setTimeout(() => {
+            if (window.speechSynthesis.speaking) {
+              console.log('✅ 语音正在播放');
+              setIsLoading(false);
+            } else {
+              console.warn('⚠️ 语音未开始播放，尝试重试...');
+              // 尝试重新播放
+              window.speechSynthesis.speak(utterance);
+            }
+          }, 100);
+          
+        } catch (speakError) {
+          console.error('❌ speak() 调用失败:', speakError);
           setIsLoading(false);
+          setErrorMessage('无法播放语音，请重试');
         }
-      }, 100);
+      }, 50);
       
     } catch (error) {
       console.error('❌ 启动语音播放失败:', error);
