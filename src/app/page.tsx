@@ -7,7 +7,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Sparkles, Star, Award } from 'lucide-react';
 import { useGameProgress } from '@/hooks/useGameProgress';
-import PWAInstallPrompt from '@/components/PWAInstallPrompt';
+// PWAInstallPrompt 已临时禁用
+// import PWAInstallPrompt from '@/components/PWAInstallPrompt';
 
 // 动态导入成就相关组件，提升首屏加载速度
 const AchievementCard = dynamic(() => import('@/components/AchievementCard').then(mod => ({ default: mod.default })), {
@@ -46,8 +47,8 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-purple-900 p-4 relative">
-      {/* PWA 安装提示 */}
-      <PWAInstallPrompt />
+      {/* PWA 安装提示 - 已临时禁用 */}
+      {/* <PWAInstallPrompt /> */}
 
       {/* 调试面板 */}
       {showDebug && (
