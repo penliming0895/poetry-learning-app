@@ -19,9 +19,12 @@ const nextConfig: NextConfig = {
   webpack: (config) => config,
 };
 
-export default withPWA({
-  dest: 'public',
-  register: true,
-  skipWaiting: true,
-  disable: process.env.NODE_ENV === 'development',
-})(nextConfig);
+// 临时禁用 PWA 以测试兼容性问题
+// export default withPWA({
+//   dest: 'public',
+//   register: true,
+//   skipWaiting: true,
+//   disable: process.env.NODE_ENV === 'development',
+// })(nextConfig);
+
+export default nextConfig;
