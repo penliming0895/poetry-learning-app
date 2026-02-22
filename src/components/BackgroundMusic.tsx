@@ -4,47 +4,62 @@ import { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
 import { Card } from '@/components/ui/card';
-import { Volume2, VolumeX, Music, Play, Pause, Music2 } from 'lucide-react';
+import { Volume2, VolumeX, Music, Play, Pause, Music2, AlertCircle } from 'lucide-react';
 
-// 背景音乐列表（使用免费的古典音乐资源）
+// 背景音乐列表（使用稳定的免费音乐资源）
 const BACKGROUND_MUSIC = [
   {
     id: 1,
-    name: '高山流水',
-    artist: '古筝',
-    url: 'https://music.163.com/song/media/outer/url?id=5234498.mp3',
-    cover: '/music-guzheng.png',
+    name: '雨声',
+    artist: '自然声音',
+    url: 'https://cdn.pixabay.com/download/audio/2022/02/07/audio_0871a9478c.mp3',
+    cover: '/music-rain.png',
   },
   {
     id: 2,
-    name: '春江花月夜',
-    artist: '琵琶',
-    url: 'https://music.163.com/song/media/outer/url?id=347230.mp3',
-    cover: '/music-pipa.png',
+    name: '森林鸟鸣',
+    artist: '自然声音',
+    url: 'https://cdn.pixabay.com/download/audio/2022/03/15/audio_105c70c4bd.mp3',
+    cover: '/music-forest.png',
   },
   {
     id: 3,
-    name: '梅花三弄',
-    artist: '笛子',
-    url: 'https://music.163.com/song/media/outer/url?id=5377636.mp3',
-    cover: '/music-flute.png',
+    name: '流水声',
+    artist: '自然声音',
+    url: 'https://cdn.pixabay.com/download/audio/2021/08/09/audio_0625c1535c.mp3',
+    cover: '/music-water.png',
   },
   {
     id: 4,
-    name: '广陵散',
-    artist: '古琴',
-    url: 'https://music.163.com/song/media/outer/url?id=28949130.mp3',
-    cover: '/music-guqin.png',
+    name: '轻柔钢琴',
+    artist: '钢琴曲',
+    url: 'https://cdn.pixabay.com/download/audio/2022/03/24/audio_145a405664.mp3',
+    cover: '/music-piano.png',
+  },
+  {
+    id: 5,
+    name: '静谧夜晚',
+    artist: '环境音',
+    url: 'https://cdn.pixabay.com/download/audio/2022/01/18/audio_46d72a5811.mp3',
+    cover: '/music-night.png',
+  },
+  {
+    id: 6,
+    name: '微风轻抚',
+    artist: '自然声音',
+    url: 'https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3',
+    cover: '/music-wind.png',
   },
 ];
 
 export default function BackgroundMusic() {
   const [isPlaying, setIsPlaying] = useState(false);
-  const [volume, setVolume] = useState(50);
+  const [volume, setVolume] = useState(30); // 默认音量降低到 30%
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
   const [showControls, setShowControls] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
@@ -55,6 +70,23 @@ export default function BackgroundMusic() {
       audioRef.current.loop = true;
       audioRef.current.volume = volume / 100;
       audioRef.current.crossOrigin = 'anonymous';
+
+      // 添加错误处理
+      audioRef.current.addEventListener('error', (e) => {
+        console.error('音频加载错误:', e);
+        setLoadError('音频加载失败，请尝试其他音乐');
+        setIsPlaying(false);
+      });
+
+      audioRef.current.addEventListener('canplaythrough', () => {
+        setIsLoaded(true);
+        setLoadError(null);
+      });
+
+      audioRef.current.addEventListener('loadstart', () => {
+        setIsLoaded(false);
+        setLoadError(null);
+      });
     }
 
     const audio = audioRef.current;
@@ -75,19 +107,17 @@ export default function BackgroundMusic() {
       setCurrentTrackIndex(index);
     }
 
-    // 恢复播放状态
-    if (savedIsPlaying === 'true') {
-      setIsPlaying(true);
-      loadAndPlay(audio);
-    } else {
-      setIsPlaying(false);
-      loadTrack(audio);
-    }
+    // 不自动恢复播放，需要用户手动点击
+    setIsPlaying(false);
+    loadTrack(audio);
 
     return () => {
       if (audio) {
         audio.pause();
         audio.src = '';
+        audio.removeEventListener('error', () => {});
+        audio.removeEventListener('canplaythrough', () => {});
+        audio.removeEventListener('loadstart', () => {});
       }
     };
   }, []);
@@ -105,7 +135,11 @@ export default function BackgroundMusic() {
     if (audioRef.current) {
       audioRef.current.src = BACKGROUND_MUSIC[currentTrackIndex].url;
       if (isPlaying) {
-        audioRef.current.play().catch(console.error);
+        audioRef.current.play().catch((error) => {
+          console.error('播放失败:', error);
+          setLoadError('播放失败，请检查网络连接');
+          setIsPlaying(false);
+        });
       }
     }
   }, [currentTrackIndex]);
@@ -118,6 +152,7 @@ export default function BackgroundMusic() {
     const track = BACKGROUND_MUSIC[currentTrackIndex];
     audio.src = track.url;
     setIsLoaded(false);
+    setLoadError(null);
   };
 
   const loadAndPlay = async (audio: HTMLAudioElement) => {
@@ -128,8 +163,10 @@ export default function BackgroundMusic() {
     try {
       await audio.play();
       setIsPlaying(true);
+      setLoadError(null);
     } catch (error) {
       console.error('播放失败:', error);
+      setLoadError('播放失败，请检查网络连接或点击重试');
       setIsPlaying(false);
     }
   };
@@ -169,12 +206,14 @@ export default function BackgroundMusic() {
 
   const nextTrack = () => {
     setCurrentTrackIndex((prev) => (prev + 1) % BACKGROUND_MUSIC.length);
+    setLoadError(null);
   };
 
   const prevTrack = () => {
     setCurrentTrackIndex(
       (prev) => (prev - 1 + BACKGROUND_MUSIC.length) % BACKGROUND_MUSIC.length
     );
+    setLoadError(null);
   };
 
   const currentTrack = BACKGROUND_MUSIC[currentTrackIndex];
@@ -196,12 +235,14 @@ export default function BackgroundMusic() {
               togglePlay();
             }}
           >
-            {isPlaying ? (
+            {loadError ? (
+              <AlertCircle className="h-5 w-5 text-red-500" />
+            ) : isPlaying ? (
               <Music2 className="h-5 w-5 text-purple-600 animate-pulse" />
             ) : (
               <Music className="h-5 w-5 text-gray-600" />
             )}
-            {isPlaying && (
+            {isPlaying && !loadError && (
               <span className="absolute -top-1 -right-1 flex h-3 w-3">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-3 w-3 bg-purple-500"></span>
@@ -210,7 +251,7 @@ export default function BackgroundMusic() {
           </Button>
           {showControls && (
             <span className="text-sm font-medium text-gray-700">
-              {currentTrack.name}
+              {loadError ? '加载失败' : currentTrack.name}
             </span>
           )}
         </div>
@@ -219,6 +260,17 @@ export default function BackgroundMusic() {
       {/* 控制面板 */}
       {showControls && (
         <Card className="absolute bottom-16 right-0 w-72 p-4 shadow-2xl animate-in slide-in-from-bottom-4">
+          {/* 错误提示 */}
+          {loadError && (
+            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+              <div className="flex items-start gap-2">
+                <AlertCircle className="h-4 w-4 text-red-500 mt-0.5 flex-shrink-0" />
+                <p className="text-xs text-red-700">{loadError}</p>
+              </div>
+              <p className="text-xs text-red-600 mt-1">提示：请检查网络连接或尝试其他音乐</p>
+            </div>
+          )}
+
           {/* 当前曲目信息 */}
           <div className="mb-4">
             <div className="flex items-center gap-3 mb-2">
@@ -237,9 +289,9 @@ export default function BackgroundMusic() {
             <div className="h-1 bg-gray-200 rounded-full overflow-hidden">
               <div
                 className={`h-full bg-gradient-to-r from-purple-500 to-pink-500 transition-all ${
-                  isPlaying ? 'animate-pulse' : ''
+                  isPlaying && !loadError ? 'animate-pulse' : ''
                 }`}
-                style={{ width: isPlaying ? '100%' : '0%' }}
+                style={{ width: (isPlaying && !loadError) ? '100%' : '0%' }}
               />
             </div>
           </div>
@@ -257,7 +309,8 @@ export default function BackgroundMusic() {
             <Button
               onClick={togglePlay}
               size="icon"
-              className="rounded-full h-12 w-12 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
+              className="rounded-full h-12 w-12 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 disabled:opacity-50"
+              disabled={loadError !== null}
             >
               {isPlaying ? (
                 <Pause className="h-5 w-5 text-white" />
@@ -305,11 +358,14 @@ export default function BackgroundMusic() {
           {/* 音乐列表 */}
           <div className="mt-4 pt-4 border-t">
             <p className="text-xs text-gray-500 mb-2">播放列表</p>
-            <div className="space-y-1">
+            <div className="space-y-1 max-h-48 overflow-y-auto">
               {BACKGROUND_MUSIC.map((track, index) => (
                 <button
                   key={track.id}
-                  onClick={() => setCurrentTrackIndex(index)}
+                  onClick={() => {
+                    setCurrentTrackIndex(index);
+                    setLoadError(null);
+                  }}
                   className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${
                     index === currentTrackIndex
                       ? 'bg-purple-100 text-purple-900 font-medium'
@@ -318,7 +374,7 @@ export default function BackgroundMusic() {
                 >
                   <div className="flex items-center justify-between">
                     <span className="truncate">{track.name}</span>
-                    {index === currentTrackIndex && isPlaying && (
+                    {index === currentTrackIndex && isPlaying && !loadError && (
                       <Music2 className="h-3 w-3 text-purple-600 animate-pulse" />
                     )}
                   </div>
