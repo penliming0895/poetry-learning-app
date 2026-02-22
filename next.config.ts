@@ -3,10 +3,13 @@ import path from 'path';
 import withPWA from 'next-pwa';
 
 const nextConfig: NextConfig = {
-  // outputFileTracingRoot: path.resolve(__dirname, '../../'),
-  /* config options here */
-  allowedDevOrigins: ['*.dev.coze.site'],
+  // 配置为静态导出，适合部署到 Gitee Pages
+  output: 'export',
+  // 静态导出的基础路径
+  basePath: '',
+  // 禁用图片优化（静态导出不支持）
   images: {
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: 'https',
@@ -15,7 +18,7 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  // 使用 webpack 而不是 Turbopack，因为 next-pwa 需要 webpack
+  // 使用 webpack 而不是 Turbopack
   webpack: (config) => config,
 };
 

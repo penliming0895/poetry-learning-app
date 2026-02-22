@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "build": "next build --webpack",
+    "build:static": "next build --webpack",
     "build:vercel": "pnpm install && next build --webpack",
     "dev": "bash ./scripts/dev.sh",
     "preinstall": "npx only-allow pnpm",
