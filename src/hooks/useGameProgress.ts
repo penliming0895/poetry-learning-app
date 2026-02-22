@@ -21,8 +21,8 @@ const defaultProgress: GameProgress = {
   wrongLineList: [],
 };
 
-// 临时禁用 localStorage 以诊断问题
-const DISABLE_LOCAL_STORAGE = true;
+// localStorage 已恢复启用
+const DISABLE_LOCAL_STORAGE = false;
 
 export const useGameProgress = () => {
   const [progress, setProgress] = useState<GameProgress>(defaultProgress);
